@@ -21,7 +21,7 @@ class UserConfig {
    </ label="Preserve Video Aspect Ratio", help="Preserve Video Aspect Ratio", options="Yes,No", order=11 /> Preserve_Aspect_Ratio="Yes";
    </ label="Enble Scanlines", help="Show scanline effect", options="None,Light,Medium,Dark", order=12 /> enable_scanline="None";
 </ label="--------  Wheel Options  --------", help="Brought to you by Project HyperPie", order=13 /> uct3="Select Below";  
-   </ label="Select Wheel Layout", help="Select wheel type", options="List Box,Horizontal, Horizontal Animated, Vertical Wheel", order=15 /> enable_list_type="List Box";
+   </ label="Select Wheel Layout", help="Select wheel type", options="List Box,Horizontal,Horizontal Animated,Vertical Wheel,Horizontal Boxart", order=15 /> enable_list_type="List Box";
 	</ label="Select Wheel Art Folder", help="The artwork to spin", options="wheel, marquee, flyer, fanart, cartart, boxart", order=16 /> orbit_art="wheel";
    </ label="Wheel Transition Time", help="Time in milliseconds for wheel spin.", order=17 /> transition_ms="35";  
    </ label="Wheel Fade Time", help="Time in milliseconds to fade the wheel.", options="Off,2500,5000,7500,10000,12500,15000,17500,20000,22500,25000,27500,30000", order=18 /> wheel_fade_ms="5000";
@@ -720,6 +720,121 @@ animation.add( PropertyAnimation ( wheelOverlay, wheelOverlayFadeLoad ) );
 
 if ( my_config["enable_list_type"] != "List Box" ){
 //Low horizontal
+if ( my_config["enable_list_type"] == "Horizontal Boxart" )
+{
+fe.load_module( "conveyor" );
+  local wheel_x = [ -flx*0.45, -flx*0.3, -flx*0.2, -flx*0.10, flx*0.06 flx*0.22, flx*0.38, flx*0.54, flx*0.70 flx*0.86, flx*1.02, flx*1.18 ];
+  local wheel_y = [ fly*0.6, fly*0.6, fly*0.6, fly*0.6, fly*0.6, fly*0.6, fly*0.6, fly*0.6, fly*0.6, fly*0.6, fly*0.6, fly*0.6, ]; 
+  local wheel_w = [ flw*0.22, flw*0.22, flw*0.22, flw*0.22, flw*0.22, flw*0.22, flw*0.22, flw*0.22, flw*0.22, flw*0.22, flw*0.22, flw*0.22, ];
+  local wheel_a = [  0,  0,  255,  255,  255,  255, 255,  255,  255,  255,  0,  0, ];
+  local wheel_h = [  flh*0.33,  flh*0.33,  flh*0.33,  flh*0.33,  flh*0.33,  flh*0.33, flh*0.33,  flh*0.33,  flh*0.33,  flh*0.33,  flh*0.33,  flh*0.33, ];
+  local wheel_r = [  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ];
+  local wheel_skew_y = [0,0, 0, 0, 0,0,0,0,0,0,0,0];
+  local wheel_skew_x = [0,0, 0, 0, 0,0,0,0,0,0,0,0];
+local num_arts = 14;
+
+class WheelEntry extends ConveyorSlot
+{
+	constructor()
+	{
+		base.constructor( ::fe.add_artwork( my_config["orbit_art"] ) );
+	}
+
+	function on_progress( progress, var )
+	{
+	  local p = progress / 0.1;
+		local slot = p.tointeger();
+		p -= slot;
+		
+		slot++;
+
+		if ( slot < 0 ) slot=0;
+		if ( slot >=10 ) slot=10;
+
+		m_obj.x = wheel_x[slot] + p * ( wheel_x[slot+1] - wheel_x[slot] );
+		m_obj.y = wheel_y[slot] + p * ( wheel_y[slot+1] - wheel_y[slot] );
+		m_obj.width = wheel_w[slot] + p * ( wheel_w[slot+1] - wheel_w[slot] );
+		m_obj.height = wheel_h[slot] + p * ( wheel_h[slot+1] - wheel_h[slot] );
+		m_obj.rotation = wheel_r[slot] + p * ( wheel_r[slot+1] - wheel_r[slot] );
+		m_obj.alpha = wheel_a[slot] + p * ( wheel_a[slot+1] - wheel_a[slot] );
+		m_obj.skew_y = wheel_skew_y[slot] + p * ( wheel_skew_y[slot+1] - wheel_skew_y[slot] );
+		m_obj.skew_x = wheel_skew_x[slot] + p * ( wheel_skew_x[slot+1] - wheel_skew_x[slot] );
+	}
+};
+
+local wheel_entries = [];
+for ( local i=0; i<num_arts/2; i++ )
+	wheel_entries.push( WheelEntry() );
+
+local remaining = num_arts - wheel_entries.len();
+
+// we do it this way so that the last wheelentry created is the Center one showing the current
+// selection (putting it at the top of the draw order)
+for ( local i=0; i<remaining; i++ )
+	wheel_entries.insert( num_arts/2, WheelEntry() );
+
+conveyor <- Conveyor();
+conveyor.set_slots( wheel_entries );
+conveyor.transition_ms = 50;
+try { conveyor.transition_ms = my_config["transition_ms"].tointeger(); } catch ( e ) { }
+conveyor.preserve_aspect_ratio = true;
+fe.load_module( "conveyor" );
+  local wheel_x = [ -flx*0.53, -flx*0.37, -flx*0.22, -flx*0.04, flx*0.10 flx*0.26, flx*0.42, flx*0.58, flx*0.74 flx*0.90, flx*1.06, flx*1.22 ];
+  local wheel_y = [ fly*1.58, fly*1.58, fly*1.58, fly*1.58, fly*1.58, fly*1.58, fly*1.58, fly*1.58, fly*1.58, fly*1.58, fly*1.58, fly*1.58, ];
+  local wheel_w = [ flw*0.22, flw*0.22, flw*0.22, flw*0.22, flw*0.22, flw*0.22, flw*0.22, flw*0.22, flw*0.22, flw*0.22, flw*0.22, flw*0.22, ];
+  local wheel_a = [  55,  55,  55,  55,  55,  55, 55,  55,  55, 55,  55,  55, ];
+  local wheel_h = [  2,  2,  2,  2,  2, 2, 3,  2,  2,  2,  2,  2, ];
+  local wheel_r = [  270, 270, 270, 270, 270, 270, 270, 270, 270, 270, 270, 270, ];
+  local wheel_skew_y = [flw*0.14,flw*0.14, flw*0.14, flw*0.14, flw*0.14,flw*0.14,flw*0.14,flw*0.14,flw*0.14,flw*0.14,flw*0.14,flw*0.14,flw*0.14]; //width
+  local wheel_skew_x = [flw*0.26,flw*0.26,flw*0.26,flw*0.26,flw*0.260,flw*0.26,flw*0.26,flw*0.26,flw*0.26,flw*0.26,flw*0.26,flw*0.26]; //hight
+local num_arts = 14;
+
+class WheelEntry extends ConveyorSlot
+{
+	constructor()
+	{
+		base.constructor( ::fe.add_artwork( my_config["orbit_art"] ) );
+	}
+
+	function on_progress( progress, var )
+	{
+	  local p = progress / 0.1;
+		local slot = p.tointeger();
+		p -= slot;
+		
+		slot++;
+
+		if ( slot < 0 ) slot=0;
+		if ( slot >=10 ) slot=10;
+
+		m_obj.x = wheel_x[slot] + p * ( wheel_x[slot+1] - wheel_x[slot] );
+		m_obj.y = wheel_y[slot] + p * ( wheel_y[slot+1] - wheel_y[slot] );
+		m_obj.width = wheel_w[slot] + p * ( wheel_w[slot+1] - wheel_w[slot] );
+		m_obj.height = wheel_h[slot] + p * ( wheel_h[slot+1] - wheel_h[slot] );
+		m_obj.rotation = wheel_r[slot] + p * ( wheel_r[slot+1] - wheel_r[slot] );
+		m_obj.alpha = wheel_a[slot] + p * ( wheel_a[slot+1] - wheel_a[slot] );
+		m_obj.skew_y = wheel_skew_y[slot] + p * ( wheel_skew_y[slot+1] - wheel_skew_y[slot] );
+		m_obj.skew_x = wheel_skew_x[slot] + p * ( wheel_skew_x[slot+1] - wheel_skew_x[slot] );
+	}
+};
+
+local wheel_entries = [];
+for ( local i=0; i<num_arts/2; i++ )
+	wheel_entries.push( WheelEntry() );
+
+local remaining = num_arts - wheel_entries.len();
+
+// we do it this way so that the last wheelentry created is the Center one showing the current
+// selection (putting it at the top of the draw order)
+for ( local i=0; i<remaining; i++ )
+	wheel_entries.insert( num_arts/2, WheelEntry() );
+
+conveyor <- Conveyor();
+conveyor.set_slots( wheel_entries );
+conveyor.transition_ms = 50;
+try { conveyor.transition_ms = my_config["transition_ms"].tointeger(); } catch ( e ) { }
+conveyor.preserve_aspect_ratio = true;
+}
 if ( my_config["enable_list_type"] == "Horizontal" )
 {
 fe.load_module( "conveyor" );
@@ -737,6 +852,7 @@ class WheelEntry extends ConveyorSlot
 	{
 		base.constructor( ::fe.add_artwork( my_config["orbit_art"] ) );
 	}
+
 	function on_progress( progress, var )
 	{
 	  local p = progress / 0.1;
@@ -1137,7 +1253,7 @@ animation.add( PropertyAnimation ( bigart, bigartfade ) );
 /////Wheel fading
 ///////////////////////////
 
-if ( my_config["enable_list_type"] == "Vertical Wheel" )
+if ( (my_config["enable_list_type"] == "Vertical Wheel" ) || ( my_config["enable_list_type"] == "Horizontal Boxart" ))
 {
 if ( wheel_fade_ms > 0 && ( my_config["enable_list_type"] == "Wheel Right" || my_config["enable_list_type"] == "Vertical Wheel" || my_config["enable_list_type"] == "Vertical Wheel Left" || my_config["enable_list_type"] == "Wheel Left" || my_config["enable_list_type"] == "Horizontal Low" || my_config["enable_list_type"] == "Horizontal Center" || my_config["enable_list_type"] == "Horizontal Low Animated" || my_config["enable_list_type"] == "Horizontal Low Big") || my_config["enable_list_type"] == "Horizontal Low Big Animated" )
 {
@@ -1262,7 +1378,7 @@ local favouriteIcon = fe.add_image("images/star.png", flx + favIconMargin, flh -
 favouriteIcon.set_rgb( gslRGB[0], gslRGB[1], gslRGB[2] )
  
 // Game Title
-if (( my_config["enable_list_type"] == "Horizontal"  ) || ( my_config["enable_list_type"] == "Horizontal Animated")){
+if (( my_config["enable_list_type"] == "Horizontal"  ) || ( my_config["enable_list_type"] == "Horizontal Animated") || ( my_config["enable_list_type"] == "Horizontal Boxart")){
 local gameTitleW = flw - crw - bbm - bbm
 local gameTitleH = floor( bbh * 0.35 ) 
 local gameTitle = fe.add_text( "[Title]", flx + bbm, (flh - bbh + bbm)*0.83, gameTitleW, gameTitleH )
@@ -1454,7 +1570,7 @@ playCountText.charsize = floor(playCountText.height * 1000/700 * 0.6)
 playCountText.font = "BebasNeueBold.otf"
 }
 
-if (( my_config["enable_list_type"] == "Horizontal"  ) || ( my_config["enable_list_type"] == "Horizontal Animated")){
+if (( my_config["enable_list_type"] == "Horizontal"  ) || ( my_config["enable_list_type"] == "Horizontal Animated") || ( my_config["enable_list_type"] == "Horizontal Boxart")){
 // Genre
 local genreImageH = bbh - bbm * 2
 local genreImageW = floor( genreImageH * 1.125 )
@@ -1646,7 +1762,8 @@ function on_transition( ttype, var, ttime ) {
 //System Image
 //////////
 if ( my_config["enable_systemimage"] == "Yes" ){
-local systemimage = fe.add_image(( "systemimages/[DisplayName]"), flw*0.01, flh*0.6, flw*0.25, flh*0.25);
+	
+local systemimage = fe.add_image(( "systemimages/[DisplayName]"), flw*0.01, flh*0.5, flw*0.25, flh*0.25);
 systemimage.alpha=255;
 systemimage.preserve_aspect_ratio = true;	
 }
