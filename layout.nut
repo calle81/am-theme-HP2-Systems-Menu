@@ -411,9 +411,11 @@ return true;
 return false;
 }
 }
-}
 local blah = PopUpImage();
+}
 
+
+if ( my_config["select_description"] == "Off" ) {}
  
 //////////////////
 ///Cart Art Animation
