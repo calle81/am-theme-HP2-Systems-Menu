@@ -43,6 +43,7 @@ class UserConfig {
    </ label="Select Game Description Text Mode", help="Select Game Description Text Mode", options="Right,Popup,Off", order=37 /> select_description="Off";
     </ label="--------    Cart Art Animation Otions     --------", help="Show or hide additional images", order=38 /> uct7="Select Below"
    </ label="Enable System Image", help="Enable System Image Art", options="Yes,No", order=39 /> enable_systemimage="Yes";
+      </ label="Enable Character Image", help="Enable Character Image Art", options="Yes,No", order=39 /> enable_characterimage="Yes";
  </ label="--------    Cart Art Animation Otions     --------", help="Show or hide additional images", order=40 /> uct8="Select Below"
    </ label="Enable Cart Art", help="Enable Cart Art", options="Yes,No", order=41 /> enable_bigart="Yes";
    </ label="Select Cart Art Folder", help="Select Cart Art Folder", options="wheel, marquee, flyer, fanart, boxart, cartart", order=42 /> select_bigartfolder="cartart";
@@ -1769,6 +1770,16 @@ local systemimage = fe.add_image(( "systemimages/[DisplayName]"), flw*0.01, flh*
 systemimage.alpha=255;
 systemimage.preserve_aspect_ratio = true;	
 }
+///////////
+//Character Image
+//////////
+if ( my_config["enable_characterimage"] == "Yes" ){
+	
+local characterimage = fe.add_image(( "characters/[DisplayName]"), flw*0.6, flh*0.65, flw*0.15, flh*0.15);
+characterimage.alpha=255;
+characterimage.preserve_aspect_ratio = true;	
+}
+
 	//Display current time
 if ( my_config["enable_clock"] == "Yes" ){
   local dt = fe.add_text( "", flw*0.65, flh*0.03, flw*0.3, flh*0.095 );
