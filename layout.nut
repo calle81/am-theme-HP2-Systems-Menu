@@ -11,6 +11,7 @@ class UserConfig {
 </ label="--------  HyperPie Main Menu Option  --------", help="Brought to you by Project HyperPie", order=1 /> uct1="Select Below";
    </ label="Select or Disable Background Image", help="Select theme background", options="Default,Per System,Per Title,None", order=2 /> enable_bg="Per System";    
     </ label="Select or Disable Overlay Image", help="Select theme overlay", options="Snazzy, Off", order=2 /> enable_overlay="Snazzy"; 
+	    </ label="Select Overlay Opacity", help="Select theme overlay opacity between 50-255", options="50, 100, 150, 200, 255", order=2 /> overlay_opacity="100"; 
    	</ label="Enable Clock", help="Enable Clock", options="Yes,No", order=3 /> enable_clock="Yes";	
 	</ label="List Box Background color as R,G,B", help="( 0-255 values allowed )\nSets the colour of background elements.\nLeave blank if you want the colour from the randomized to be stored permanently.", option="0", order=4 /> bgrgb="10,20,60"
 	</ label="Category text color as R,G,B", help="( 0-255 values allowed )\nSets the colour of accent elements.\nLeave blank if you want the colour from the randomized to be stored permanently.", option="0", order=5 /> selrgb="255,255,0"
@@ -192,7 +193,7 @@ b_art.alpha=255;
 if ( my_config["enable_overlay"] == "Snazzy") 
 {
 local overlay_art = fe.add_image("snazzy/[DisplayName]", 0, 0, flw, flh );
-overlay_art.alpha=100;
+overlay_art.alpha=my_config["overlay_opacity"].tointeger();
 }
 
 /////////////////////
