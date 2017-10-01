@@ -10,10 +10,11 @@
 class UserConfig {
 </ label="--------  HyperPie Main Menu Option  --------", help="Brought to you by Project HyperPie", order=1 /> uct1="Select Below";
    </ label="Select or Disable Background Image", help="Select theme background", options="Default,Per System,Per Title,None", order=2 /> enable_bg="Per System";    
-    </ label="Select or Disable Overlay Image", help="Select theme overlay", options="Snazzy, Off", order=2 /> enable_overlay="Snazzy"; 
-	    </ label="Select Overlay Opacity", help="Select theme overlay opacity between 50-255", options="50, 100, 150, 200, 255", order=2 /> overlay_opacity="100"; 
+    </ label="Select or Disable Overlay Image", help="Select theme overlay", options="Snazzy, Snazzy On Top, Off", order=2 /> enable_overlay="Snazzy"; 
+	</ label="Select Overlay Opacity", help="Select theme overlay opacity between 50-255", options="50, 100, 150, 200, 255", order=2 /> overlay_opacity="100"; 
+	</ label="Enabe or Disable Frame Around Video", help="Select frame option", options="Yes, No", order=3 /> enable_frame="Yes";  
    	</ label="Enable Clock", help="Enable Clock", options="Yes,No", order=3 /> enable_clock="Yes";	
-	</ label="List Box Background color as R,G,B", help="( 0-255 values allowed )\nSets the colour of background elements.\nLeave blank if you want the colour from the randomized to be stored permanently.", option="0", order=4 /> bgrgb="10,20,60"
+	</ label="List Box Background and Frame Color as R,G,B", help="( 0-255 values allowed )\nSets the colour of background elements.\nLeave blank if you want the colour from the randomized to be stored permanently.", option="0", order=4 /> bgrgb="10,20,60"
 	</ label="Category text color as R,G,B", help="( 0-255 values allowed )\nSets the colour of accent elements.\nLeave blank if you want the colour from the randomized to be stored permanently.", option="0", order=5 /> selrgb="255,255,0"
 	</ label="Title color as R,G,B", help="( 0-255 values allowed )\nSets the colour of accent elements.\nLeave blank if you want the colour from the randomized to be stored permanently.", option="0", order=6 /> titrgb="255,255,0" 
 	</ label="Game Selection Bar Color as R,G,B", help="( 0-255 values allowed )\nSets the colour of accent elements.\nLeave blank if you want the colour from the randomized to be stored permanently.", option="0", order=7 /> gslrgb="254,58,124" 
@@ -214,7 +215,18 @@ if ( my_config["Preserve_Aspect_Ratio"] == "Yes")
 snap.preserve_aspect_ratio = true;
 }
 }
-
+//Frame
+if ( my_config["enable_frame"] == "Yes") {
+local frame = fe.add_image("frame.png", flx*0.3, fly*0.16, flw*0.4, flh*0.55);
+frame.set_rgb( bgRGB[0], bgRGB[1], bgRGB[2] )
+frame.preserve_aspect_ratio = true;
+}
+//Overlay Art
+if ( my_config["enable_overlay"] == "Snazzy On Top") 
+{
+local overlay_art = fe.add_image("snazzynologo/[DisplayName]", 0, 0, flw, flh );
+overlay_art.alpha=my_config["overlay_opacity"].tointeger();
+}
 
 //////////////////
 //Scanlines
@@ -1685,6 +1697,17 @@ local categoryLeftAnimA = Animate( categoryLeft, "alpha", categoryOvershot, 0, c
 local categoryRightAnimA = Animate( categoryRight, "alpha", categoryOvershot, 0, categorySmoothing )
 local categoryLeft2AnimA = Animate( categoryLeft2, "alpha", categoryOvershot, 0, categorySmoothing )
 local categoryRight2AnimA = Animate( categoryRight2, "alpha", categoryOvershot, 0, categorySmoothing )
+
+// List Entry
+local gameListEntryW = floor( bth * 2.5 )
+local gameListEntryH = floor( bth * 0.25 )
+local gameListEntryY = floor( bth / 2.0 ) - floor( gameListEntryH / 2 )
+local gameListEntry = fe.add_text("[ListEntry]/[ListSize]", flx + flw - crw - gameListEntryW, gameListEntryY , gameListEntryW, gameListEntryH )
+gameListEntry.align = Align.Right
+gameListEntry.style = Style.Regular
+gameListEntry.font = "BebasNeueLight.otf"
+gameListEntry.set_rgb(titRGB[0],titRGB[1],titRGB[2])
+gameListEntry.charsize = floor(gameListEntry.height * 1000/700)
 
 // Transitions
 fe.add_transition_callback( this, "on_transition" )
