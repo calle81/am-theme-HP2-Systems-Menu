@@ -10,7 +10,8 @@
 class UserConfig {
 </ label="--------  HyperPie Main Menu Option  --------", help="Brought to you by Project HyperPie", order=1 /> uct1="Select Below";
    </ label="Select or Disable Background Image", help="Select theme background", options="Per System,Per Title,City Lights, Pixel Skyline, Pixel Dojo, Neon, Flyer ,None", order=2 /> enable_bg="Flyer"; 
-    </ label="Enable Title", help="Enable Title", options="Yes, No", order=2 /> enable_title="Yes";    
+    </ label="Enable Title", help="Enable Title", options="Yes, No", order=2 /> enable_title="Yes";
+	</ label="Enable Border Overlay", help="Enable Border Overlay", options="Yes,No", order=2 /> enable_border="Yes"; 
     </ label="Select or Disable Overlay Image", help="Select theme overlay", options="Snazzy, Snazzy On Top, Off", order=2 /> enable_overlay="Off"; 
 	</ label="Select Overlay Opacity", help="Select theme overlay opacity between 50-255", options="50, 100, 150, 200, 255", order=2 /> overlay_opacity="100"; 
 	</ label="Enabe Frame Around Video", help="Select frame option", options="Yes, No", order=3 /> enable_frame="No";
@@ -245,7 +246,7 @@ if ( my_config["enable_bg"] == "Per Title")
 local b_art = fe.add_image("backgrounds/[Title].png", 0, 0, flw, flh );
 b_art.alpha=255;
 }
-//if ( my_config["enable_bg"] == "Solid") {
+if ( my_config["enable_border"] == "Yes") {
 // Snap Background
 local flx = ( fe.layout.width - layout_width ) / 2
 local fly = ( fe.layout.height - layout_height ) / 2
@@ -256,15 +257,15 @@ snapBackground.alpha=100;
  // Top Background
 local bannerTop = fe.add_image( "white.png", flx, 0, flw, bth)
 bannerTop.set_rgb( bgRGB[0], bgRGB[1], bgRGB[2] )
-bannerTop.alpha=200;
+bannerTop.alpha=150;
 
 // Bottom Background
 local bannerBottom = fe.add_image( "white.png", flx, flh - bbh, flw, bbh)
 bannerBottom.set_rgb( bgRGB[0], bgRGB[1], bgRGB[2] )
-bannerBottom.alpha=200;
+bannerBottom.alpha=150;
 local flx = fe.layout.width;
 local fly = fe.layout.height;
-//}
+}
 //Overlay Art
 if ( my_config["enable_overlay"] == "Snazzy") 
 {
