@@ -193,17 +193,17 @@ try {	wheel_fade_ms = my_config["wheel_fade_ms"].tointeger(); } catch ( e ) { }
 // based up on the layout option choice
 if ( my_config["enable_bg"] == "Flyer")
 {
-local bgart = PanAndScanArt( "flyer", 0, 0, flw, flh);
-bgart.trigger = Transition.EndNavigation;
-bgart.preserve_aspect_ratio = false;
+local bgart = PanAndScanImage( "../../menu-art/flyer/[DisplayName]", 0, 0, flw, flh);
+//bgart.trigger = Transition.EndNavigation;
+bgart.preserve_aspect_ratio = true;
 bgart.set_fit_or_fill("fill");
 bgart.set_anchor(::Anchor.Center);
 bgart.set_zoom(4.5, 0.00008);
 bgart.set_animate(::AnimateType.Bounce, 0.50, 0.50)
-bgart.set_randomize_on_transition(true);
+bgart.set_randomize_on_transition(false);
 bgart.set_start_scale(1.1);
  local alpha_cfg = {
-    when = Transition.ToNewSelection,
+//    when = Transition.ToNewSelection,
     property = "alpha",
     start = 0,
     end = 200,
@@ -250,9 +250,9 @@ if ( my_config["enable_border"] == "Yes") {
 // Snap Background
 local flx = ( fe.layout.width - layout_width ) / 2
 local fly = ( fe.layout.height - layout_height ) / 2
-local snapBackground = fe.add_image( "images/gradientV.png", flx, bth, flw - crw, flh - bth - bbh )
-snapBackground.set_rgb( bgRGB[0] * 0.6, bgRGB[1] * 0.6, bgRGB[2] * 0.6 )
-snapBackground.alpha=100;
+//local snapBackground = fe.add_image( "images/gradientV.png", flx, bth, flw - crw, flh - bth - bbh )
+//snapBackground.set_rgb( bgRGB[0] * 0.6, bgRGB[1] * 0.6, bgRGB[2] * 0.6 )
+//snapBackground.alpha=100;
 
  // Top Background
 local bannerTop = fe.add_image( "white.png", flx, 0, flw, bth)
@@ -1572,7 +1572,7 @@ function year_formatted()
 
 local gameYearW = flw - crw - bbm - floor( bbh * 2.875 )
 local gameYearH = floor( bbh * 0.15 )
-local gameYear = fe.add_text( "Project HyperPie 2017]", flx + bbm, flh - bbm - gameYearH, gameYearW, gameYearH )
+local gameYear = fe.add_text( "[!year_formatted]", flx + bbm, flh - bbm - gameYearH, gameYearW, gameYearH )
 gameYear.align = Align.Left
 gameYear.style = Style.Regular
 gameYear.nomargin = true
