@@ -16,7 +16,8 @@ class UserConfig {
 	</ label="Select Overlay Opacity", help="Select theme overlay opacity between 50-255", options="50, 100, 150, 200, 255", order=2 /> overlay_opacity="100"; 
 	</ label="Enabe Frame Around Video", help="Select frame option", options="Yes, No", order=3 /> enable_frame="No";
    	</ label="Enable Clock", help="Enable Clock", options="Yes,No", order=3 /> enable_clock="Yes";
-	</ label="Background Color as R,G,B", help="( 0-255 values allowed )\nSets the colour of background elements.\nLeave blank if you want the colour from the randomized to be stored permanently.", option="0", order=4 /> bgrgb="20,40,60"
+	</ label="Border Overlay Color as R,G,B", help="( 0-255 values allowed )\nSets the colour of background elements.\nLeave blank if you want the colour from the randomized to be stored permanently.", option="0", order=4 /> bgrgb="0,0,0"
+	</ label="List Box Background Color as R,G,B", help="( 0-255 values allowed )\nSets the colour of background elements.\nLeave blank if you want the colour from the randomized to be stored permanently.", option="0", order=4 /> lbgrgb="20,40,60"
 	</ label="Video Frame Color as R,G,B", help="( 0-255 values allowed )\nSets the colour of the frame.\nLeave blank if you want the colour from the randomized to be stored permanently.", option="0", order=4 /> frrgb="250,250,250"
 	</ label="Category text color as R,G,B", help="( 0-255 values allowed )\nSets the colour of accent elements.\nLeave blank if you want the colour from the randomized to be stored permanently.", option="0", order=5 /> selrgb="255,255,0"
 	</ label="Title color as R,G,B", help="( 0-255 values allowed )\nSets the colour of accent elements.\nLeave blank if you want the colour from the randomized to be stored permanently.", option="0", order=6 /> titrgb="255,255,0" 
@@ -128,6 +129,7 @@ function irand(max) {
 }
 
 local bgRYB = [irand(255), irand(255), irand(255)]
+local lbgRYB = [255 - bgRYB[0], 255 - bgRYB[1], 255 - bgRYB[2]]
 local selRYB = [255 - bgRYB[0], 255 - bgRYB[1], 255 - bgRYB[2]]
 local titRYB = [255 - bgRYB[0], 255 - bgRYB[1], 255 - bgRYB[2]]
 local gslRYB = [255 - bgRYB[0], 255 - bgRYB[1], 255 - bgRYB[2]]
@@ -135,6 +137,7 @@ local pldRYB = [255 - bgRYB[0], 255 - bgRYB[1], 255 - bgRYB[2]]
 local frRYB = [255 - bgRYB[0], 255 - bgRYB[1], 255 - bgRYB[2]]
 
 local bgRGB = ryb2rgb(bgRYB)
+local lbgRGB = ryb2rgb(titRYB)
 local selRGB = ryb2rgb(selRYB)
 local titRGB = ryb2rgb(titRYB)
 local gslRGB = ryb2rgb(titRYB)
@@ -142,6 +145,7 @@ local pldRGB = ryb2rgb(titRYB)
 local frRGB = ryb2rgb(titRYB)
 
 try { bgRGB = fe.nv[0] } catch(e) {}
+try { lbgRGB = fe.nv[0] } catch(e) {}
 try { selRGB = fe.nv[1] } catch(e) {}
 try { titRGB = fe.nv[1] } catch(e) {}
 try { gslRGB = fe.nv[1] } catch(e) {}
@@ -151,6 +155,12 @@ try { frRGB = fe.nv[1] } catch(e) {}
 local error_message = false
 if( my_config["bgrgb"] != "" ) {
 	try { bgRGB = split(my_config["bgrgb"], ",").map(function(value) return value.tointeger()) }
+	catch(e) { error_message = true}
+}
+
+local error_message = false
+if( my_config["lbgrgb"] != "" ) {
+	try { lbgRGB = split(my_config["lbgrgb"], ",").map(function(value) return value.tointeger()) }
 	catch(e) { error_message = true}
 }
 
@@ -177,7 +187,7 @@ if( my_config["frrgb"] != "" ) {
 	catch(e) { error_message = true}
 }
 
-if ( error_message || bgRGB.len() != 3 || selRGB.len() != 3 || titRGB.len() != 3 || gslRGB.len() != 3 || pldRGB.len() != 3 || frRGB.len() != 3)
+if ( error_message || bgRGB.len() != 3 ||  lbgRGB.len() != 3 ||  selRGB.len() != 3 || titRGB.len() != 3 || gslRGB.len() != 3 || pldRGB.len() != 3 || frRGB.len() != 3)
 	while (!fe.overlay.splash_message( "Background or Accent colour has a wrong format.\nPlease check it in Layout Options")){} 
 
 
@@ -202,14 +212,7 @@ bgart.set_zoom(4.5, 0.00008);
 bgart.set_animate(::AnimateType.Bounce, 0.50, 0.50)
 bgart.set_randomize_on_transition(false);
 bgart.set_start_scale(1.1);
- local alpha_cfg = {
-//    when = Transition.ToNewSelection,
-    property = "alpha",
-    start = 0,
-    end = 200,
-    time = 3000
-}
-animation.add( PropertyAnimation( bgart, alpha_cfg ) );
+
 }
 
 if ( my_config["enable_bg"] == "City Lights") 
@@ -793,7 +796,7 @@ animation.add( PropertyAnimation ( bigart, bigartfade ) );
 if ( my_config["enable_list_type"] == "Vertical Wheel" )
 {
 local wheelOverlay = fe.add_image ("white.png", flx*0.7, 0, flw*0.32, fly)
-wheelOverlay.set_rgb(bgRGB[0],bgRGB[1],bgRGB[2])
+wheelOverlay.set_rgb(lbgRGB[0],lbgRGB[1],lbgRGB[2])
 wheelOverlay.alpha = 200;
  local wheelOverlayFade = {
     when = Transition.ToNewSelection,
@@ -1428,7 +1431,7 @@ local flyerW = lbw
 
 // Game ListBox Background
 local gameListBoxBackground = fe.add_text("", flx + flw - crw, 0, lbw, flh )
-gameListBoxBackground.set_bg_rgb( bgRGB[0] * 0.75, bgRGB[1] * 0.75, bgRGB[2] * 0.75 )
+gameListBoxBackground.set_bg_rgb( lbgRGB[0] * 0.75, lbgRGB[1] * 0.75, lbgRGB[2] * 0.75 )
 gameListBoxBackground.bg_alpha = 0
 
 
