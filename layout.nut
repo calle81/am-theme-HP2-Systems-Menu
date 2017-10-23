@@ -9,7 +9,8 @@
 
 class UserConfig {
 </ label="--------  HyperPie Main Menu Option  --------", help="Brought to you by Project HyperPie", order=1 /> uct1="Select Below";
-   </ label="Select or Disable Background Image", help="Select theme background", options="Boxart, System Flyer, Per System,Per Title,City Lights, Pixel Skyline, Pixel Dojo, Neon, None", order=2 /> enable_bg="Boxart"; 
+   </ label="Enable Left Side Art", help="Enable Left Side Art", options="Yes,No", order=1 /> enable_leftart="No";
+   </ label="Select or Disable Background Image", help="Select theme background", options="Boxart, System Flyer, Hursty HP2, Per System,Per Title,City Lights, Pixel Skyline, Pixel Dojo, Neon, None", order=2 /> enable_bg="Boxart"; 
     </ label="Enable Title", help="Enable Title", options="Yes, No", order=2 /> enable_title="Yes";
 	</ label="Enable Border Overlay", help="Enable Border Overlay", options="Yes,No", order=2 /> enable_border="Yes"; 
     </ label="Select or Disable Overlay Image", help="Select theme overlay", options="Snazzy, Snazzy On Top, Off", order=2 /> enable_overlay="Off"; 
@@ -215,7 +216,7 @@ bgart.set_start_scale(1.1);
 if ( my_config["enable_bg"] == "Boxart")
 {
 local bgart2 = PanAndScanArt( "flyer", 0, 0, flw, flh);
-//bgart.trigger = Transition.EndNavigation;
+bgart.trigger = Transition.EndNavigation;
 bgart2.preserve_aspect_ratio = true;
 bgart2.set_fit_or_fill("fill");
 bgart2.set_anchor(::Anchor.Center);
@@ -224,6 +225,11 @@ bgart2.set_animate(::AnimateType.Bounce, 0.50, 0.50)
 bgart2.set_randomize_on_transition(false);
 bgart2.set_start_scale(1.1);
 }
+}
+if ( my_config["enable_bg"] == "Hursty HP2") 
+{
+local b_art = fe.add_image("../../menu-art/fade-in/[Emulator]", 0, 0, flw, flh );
+b_art.alpha=255;
 }
 if ( my_config["enable_bg"] == "City Lights") 
 {
@@ -537,6 +543,7 @@ if ( my_config["select_description"] == "Off" ) {}
 //////////////////
 
 /////////////////////////////////////////////////////
+if ( my_config["enable_leftart"] == "Yes" ){
 if ( my_config["enable_bigart"] == "Yes" ){
 local bigart = fe.add_artwork(( my_config["select_bigartfolder"] ), flx*0.09, fly*0.3, flw*0.15, flh*0.25);
 bigart.preserve_aspect_ratio = true;
@@ -655,13 +662,14 @@ if ( my_config["enable_bigartfade"] == "Yes" ){
 animation.add( PropertyAnimation ( bigart, bigartfade ) );
 }
 }
-
+}
 
 //////////////////////////////////////
 
 // CD art animation
 
 //////////////////////////////////////
+if ( my_config["enable_leftart"] == "Yes" ){
 if ( my_config["enable_bigart"] == "Yes" ){
 local cdart = fe.add_artwork("cdart", flx*0.1, fly*0.3, flw*0.15, flh*0.25);
 cdart.preserve_aspect_ratio = true;
@@ -675,11 +683,12 @@ when = When.StartLayout ,property = "rotation", start = 0, end = 360, time = 300
 animation.add( PropertyAnimation ( cdart, cdart_rotation ) );
 animation.add( PropertyAnimation ( cdart, cdart_rotationLoad ) );
 }
-//Animation
+}
 
 /////////////////////////////////////////////////////
 // Box Art Animation
 ///////////////////////////////////////////////////////////////////////////
+if ( my_config["enable_leftart"] == "Yes" ){
 if ( my_config["enable_bigart2"] == "Yes" ){
 local bigart = fe.add_artwork(( my_config["select_bigartfolder2"] ), flx*0.005, fly*0.24, flw*0.16, flh*0.36);
 bigart.preserve_aspect_ratio = true;
@@ -798,7 +807,7 @@ if ( my_config["enable_bigartfade2"] == "Yes" ){
 animation.add( PropertyAnimation ( bigart, bigartfade ) );
 }
 }
-
+}
 
 ///////////////////////
 //wheel overlay
@@ -1585,7 +1594,7 @@ function year_formatted()
 
 local gameYearW = flw - crw - bbm - floor( bbh * 2.875 )
 local gameYearH = floor( bbh * 0.15 )
-local gameYear = fe.add_text( "[!year_formatted]", flx + bbm, flh - bbm - gameYearH, gameYearW, gameYearH )
+local gameYear = fe.add_text( "[Emulator]  [!year_formatted]", flx + bbm, flh - bbm - gameYearH, gameYearW, gameYearH )
 gameYear.align = Align.Left
 gameYear.style = Style.Regular
 gameYear.nomargin = true
@@ -1874,11 +1883,12 @@ function on_transition( ttype, var, ttime ) {
 ///////////
 //System Image
 //////////
-if ( my_config["enable_systemimage"] == "Yes" ){
-	
+if ( my_config["enable_leftart"] == "Yes" ){
+if ( my_config["enable_systemimage"] == "Yes" ){	
 local systemimage = fe.add_image(( "systemimages/[DisplayName]"), flw*0.01, flh*0.45, flw*0.22, flh*0.3);
 systemimage.alpha=255;
 systemimage.preserve_aspect_ratio = true;	
+}
 }
 ///////////
 //Character Image
@@ -1914,4 +1924,4 @@ function update_clock( ttime ){
 //
 // Fade_in Module
 //
-//fe.load_module("fade_in.nut");
+fe.load_module("fade_in.nut");
