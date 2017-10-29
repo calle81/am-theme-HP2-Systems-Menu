@@ -9,14 +9,16 @@
 
 class UserConfig {
 </ label="--------  HyperPie Main Menu Option  --------", help="Brought to you by Project HyperPie", order=1 /> uct1="Select Below";
-   </ label="Enable Left Side Art", help="Enable Left Side Art", options="Yes,No", order=1 /> enable_leftart="No";
-   </ label="Select or Disable Background Image", help="Select theme background", options="Boxart, System Flyer, Hursty HP2, Per System,Per Title,City Lights, Pixel Skyline, Pixel Dojo, Neon, None", order=2 /> enable_bg="Boxart"; 
-    </ label="Enable Title", help="Enable Title", options="Yes, No", order=2 /> enable_title="Yes";
-	</ label="Enable Border Overlay", help="Enable Border Overlay", options="Yes,No", order=2 /> enable_border="Yes"; 
-    </ label="Select or Disable Overlay Image", help="Select theme overlay", options="Snazzy, Snazzy On Top, Off", order=2 /> enable_overlay="Off"; 
-	</ label="Select Overlay Opacity", help="Select theme overlay opacity between 50-255", options="50, 100, 150, 200, 255", order=2 /> overlay_opacity="100"; 
-	</ label="Enable Frame Around Video", help="Select frame option", options="Yes, No", order=3 /> enable_frame="No";
-   	</ label="Enable Clock", help="Enable Clock", options="Yes,No", order=3 /> enable_clock="Yes";
+ </ label="Search Key", help="Choose the key to initiate a search", options="custom1,custom2,custom3,custom4,custom5,custom6,up,down,left,right", order=1 /> user_search_key="custom1";
+    </ label="Search Results", help="Choose the search method", options="show_results,next_match", order=1 /> user_search_method="show_results";
+   </ label="Left Side Art", help="Enable Left Side Art", options="Yes,No", order=1 /> enable_leftart="No";
+   </ label="Background Image", help="Select theme background", options="Boxart, System Flyer, Hursty HP2, Per System,Per Title,City Lights, Pixel Skyline, Pixel Dojo, Neon, None", order=2 /> enable_bg="Boxart"; 
+    </ label="Title", help="Enable Title", options="Yes, No", order=2 /> enable_title="Yes";
+	</ label="Border Overlay", help="Enable Border Overlay", options="Yes,No", order=2 /> enable_border="Yes"; 
+    </ label="Overlay Image", help="Select theme overlay", options="Snazzy, Snazzy On Top, Off", order=2 /> enable_overlay="Off"; 
+	</ label="Overlay Opacity", help="Select theme overlay opacity between 50-255", options="50, 100, 150, 200, 255", order=2 /> overlay_opacity="100"; 
+	</ label="Frame Around Video", help="Select frame option", options="Yes, No", order=3 /> enable_frame="No";
+   	</ label="Clock", help="Enable Clock", options="Yes,No", order=3 /> enable_clock="Yes";
 	</ label="Border Overlay Color as R,G,B", help="( 0-255 values allowed )\nSets the colour of background elements.\nLeave blank if you want the colour from the randomized to be stored permanently.", option="0", order=4 /> bgrgb="0,0,0"
 	</ label="List Box Background Color as R,G,B", help="( 0-255 values allowed )\nSets the colour of background elements.\nLeave blank if you want the colour from the randomized to be stored permanently.", option="0", order=4 /> lbgrgb="20,40,60"
 	</ label="Video Frame Color as R,G,B", help="( 0-255 values allowed )\nSets the colour of the frame.\nLeave blank if you want the colour from the randomized to be stored permanently.", option="0", order=4 /> frrgb="250,250,250"
@@ -25,12 +27,12 @@ class UserConfig {
 	</ label="Game Selection Bar Color as R,G,B", help="( 0-255 values allowed )\nSets the colour of accent elements.\nLeave blank if you want the colour from the randomized to be stored permanently.", option="0", order=7 /> gslrgb="254,58,124" 
 	</ label="Year and Manufacturer as R,G,B", help="( 0-255 values allowed )\nSets the colour of accent elements.\nLeave blank if you want the colour from the randomized to be stored permanently.", option="0", order=8 /> pldrgb="254,255,255"  
  </ label="--------  Video Options  --------", help="Brought to you by Project HyperPie", order=9 /> uct2="Select Below";
-   </ label="Select Video Mode", help="Select Video Mode and Positon, Window or Off", options="Full Screen,Off,Center", order=10 /> videomode="Center";
+   </ label="Video Mode", help="Select Video Mode and Positon, Window or Off", options="Full Screen,Off,Center", order=10 /> videomode="Center";
    </ label="Preserve Video Aspect Ratio", help="Preserve Video Aspect Ratio", options="Yes,No", order=11 /> Preserve_Aspect_Ratio="Yes";
-   </ label="Enble Scanlines", help="Show scanline effect", options="None,Light,Medium,Dark", order=12 /> enable_scanline="None";
+   </ label="Scanlines", help="Show scanline effect", options="None,Light,Medium,Dark", order=12 /> enable_scanline="None";
 </ label="--------  Wheel Options  --------", help="Brought to you by Project HyperPie", order=13 /> uct3="Select Below";  
-   </ label="Select Wheel Layout", help="Select wheel type", options="List Box,Horizontal,Horizontal Animated,Vertical Wheel", order=15 /> enable_list_type="List Box";
-	</ label="Select Wheel Art Folder", help="The artwork to spin", options="wheel, marquee, flyer, fanart, cartart, boxart", order=16 /> orbit_art="wheel";
+   </ label="Wheel Layout", help="Select wheel type", options="List Box,Horizontal,Horizontal Animated,Vertical Wheel", order=15 /> enable_list_type="List Box";
+	</ label="Wheel Art Folder", help="The artwork to spin", options="wheel, marquee, flyer, fanart, cartart, boxart", order=16 /> orbit_art="wheel";
    </ label="Wheel Transition Time", help="Time in milliseconds for wheel spin.", order=17 /> transition_ms="35";  
    </ label="Wheel Fade Time", help="Time in milliseconds to fade the wheel.", options="Off,2500,5000,7500,10000,12500,15000,17500,20000,22500,25000,27500,30000", order=18 /> wheel_fade_ms="2500";
    	</ label="Game List Rows", help="How many games to display on the List Box", options="11,13,15,17,19,21,23,25,27,29,31", order=19 /> rows="19"
@@ -97,6 +99,7 @@ fe.load_module( "pan-and-scan" );
 fe.do_nut("nuts/ryb2rgb.nut")
 fe.do_nut("nuts/animate.nut")
 fe.do_nut("nuts/genre.nut")
+fe.load_module("objects/keyboard-search")
 
 fe.layout.font="BebasNeueRegular.otf";
 
@@ -197,6 +200,7 @@ first_tick <- 0;
 stop_fading <- true;
 wheel_fade_ms <- 0;
 try {	wheel_fade_ms = my_config["wheel_fade_ms"].tointeger(); } catch ( e ) { }
+
 
 
 // Background Art 
@@ -346,6 +350,8 @@ local scanline = fe.add_image( "scanline.png", 0, 0, flw, flh );
 scanline.preserve_aspect_ratio = false;
 scanline.alpha = 255;
 }
+
+
 
 //////////////////
 ///Flyer Art Animation
@@ -523,7 +529,7 @@ fe.add_signal_handler( this, "on_signal" )
 
 function on_signal( signal )
 {
-if ( signal == "custom1" )
+if ( signal == "custom2" )
 {
 _my_image_bg.visible=!_my_image_bg.visible;
 _my_text.visible=_my_image_bg.visible;
@@ -1650,6 +1656,27 @@ if ( my_config["fadeWheelTitle"] == "Yes" ){
 }
 }
 if (( my_config["enable_list_type"] == "Vertical Wheel"  ) || ( my_config["enable_list_type"] == "List Box")){
+
+///////////
+//System Image
+//////////
+if ( my_config["enable_leftart"] == "Yes" ){
+if ( my_config["enable_systemimage"] == "Yes" ){	
+local systemimage = fe.add_image(( "systemimages/[DisplayName]"), flw*0.01, flh*0.45, flw*0.22, flh*0.3);
+systemimage.alpha=255;
+systemimage.preserve_aspect_ratio = true;	
+}
+}
+///////////
+//Character Image
+//////////
+if ( my_config["enable_characterimage"] == "Yes" ){
+	
+local characterimage = fe.add_image(( "characters/[DisplayName]"), flw*0.6, flh*0.65, flw*0.15, flh*0.15);
+characterimage.alpha=255;
+characterimage.preserve_aspect_ratio = true;	
+}
+
 // Genre
 local genreImageH = bbh - bbm * 2
 local genreImageW = floor( genreImageH * 1.125 )
@@ -1719,6 +1746,12 @@ local wheelImageW = floor( wheelScale * 0.3 )*0.9
 local wheelImageH = floor( wheelScale * 0.3 )*0.9
 local wheelImage = fe.add_artwork( "wheel" ,flx + bbm, bth - floor( wheelImageH / 2 ), wheelImageW, wheelImageH )
 wheelImage.preserve_aspect_ratio = true
+
+//Search
+local search_surface = fe.add_surface(fe.layout.width*0.49, fe.layout.height*0.65)
+	search_surface.x = fe.layout.width*0.2
+    search_surface.y = fe.layout.height*0.18
+KeyboardSearch(search_surface).init()
 
 // Category
 local categoryW = floor( bth * 2.5 )
@@ -1880,25 +1913,7 @@ function on_transition( ttype, var, ttime ) {
 	}
 	return false
 	}
-///////////
-//System Image
-//////////
-if ( my_config["enable_leftart"] == "Yes" ){
-if ( my_config["enable_systemimage"] == "Yes" ){	
-local systemimage = fe.add_image(( "systemimages/[DisplayName]"), flw*0.01, flh*0.45, flw*0.22, flh*0.3);
-systemimage.alpha=255;
-systemimage.preserve_aspect_ratio = true;	
-}
-}
-///////////
-//Character Image
-//////////
-if ( my_config["enable_characterimage"] == "Yes" ){
-	
-local characterimage = fe.add_image(( "characters/[DisplayName]"), flw*0.6, flh*0.65, flw*0.15, flh*0.15);
-characterimage.alpha=255;
-characterimage.preserve_aspect_ratio = true;	
-}
+
 
 	//Display current time
 if ( my_config["enable_clock"] == "Yes" ){
@@ -1921,7 +1936,9 @@ function update_clock( ttime ){
 }
   fe.add_ticks_callback( this, "update_clock" );
 }
+
 //
 // Fade_in Module
 //
 fe.load_module("fade_in.nut");
+
