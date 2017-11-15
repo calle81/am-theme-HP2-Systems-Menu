@@ -12,7 +12,8 @@ class UserConfig {
  </ label="Search Key", help="Choose the key to initiate a search", options="custom1,custom2,custom3,custom4,custom5,custom6,up,down,left,right", order=1 /> user_search_key="custom1";
     </ label="Search Results", help="Choose the search method", options="show_results,next_match", order=1 /> user_search_method="show_results";
    </ label="Left Side Art", help="Enable Left Side Art", options="Yes,No", order=1 /> enable_leftart="No";
-   </ label="Background Image", help="Select theme background", options="Boxart, System Flyer, Hursty HP2, Per System,Per Title,City Lights, Pixel Skyline, Pixel Dojo, Neon, None", order=2 /> enable_bg="Boxart"; 
+      </ label="Background Music", help="Enable Background Music", options="Yes,No", order=1 /> enable_backgroundmusic="Yes";
+   </ label="Background Image", help="Select theme background", options="Game Flyer Pan & Scan, System Flyer Pan & Scan, Black Logos Slide, Blue Logos Slide,Hursty HP2 Static,City Lights Slide, Pixel Skyline Slide, Neon Static, None", order=2 /> enable_bg="Blue Logos Slide"; 
     </ label="Title", help="Enable Title", options="Yes, No", order=2 /> enable_title="Yes";
 	</ label="Border Overlay", help="Enable Border Overlay", options="Yes,No", order=2 /> enable_border="Yes"; 
     </ label="Overlay Image", help="Select theme overlay", options="Snazzy, Snazzy On Top, Off", order=2 /> enable_overlay="Off"; 
@@ -76,15 +77,6 @@ class UserConfig {
    </ label="Enable Box Art Fly-in on Selection", help="Enable Box Art Fly-in on Selection", options="Yes,No", order=59 /> enable_bigartflyin2="No";
 </ label="--------    Flyer Animation Otions     --------", help="Show or hide additional images", order=60 /> uct10="Select Below";
    </ label="Enable Flyer Art", help="Enable Flyer Art", options="Yes,No", order=61 /> enable_bigart3="Yes";
-   </ label="Select Flyer Foldert", help="Select Flyer Folder", options="wheel, marquee, flyer, fanart, boxart, cartart", order=62 /> select_bigartfolder3="flyer";
-   </ label="Select Flyer Position", help="Select Flyer Art Position", options="Left,Right", order=63 /> select_bigartposition3="Right";
-   </ label="Enable Flyer Fade on Selection", help="Enable Flyer Art Fade on Selection", options="Yes,No", order=64 /> enable_bigartfade3="No";
-   </ label="Enable Flyer Fade on Load", help="Enable Flyer Art Fade on Load", options="Yes,No", order=65 /> enable_bigartfadeonload3="No";
-   </ label="Enable Flyer Scale on Selection", help="Disable Flyer Art Scale on Load", options="Yes,No", order=66 /> enable_bigartscale3="No";
-   </ label="Enable Flyer Scale on Load", help="Disable Flyer Art Scale on Load", options="Yes,No", order=67 /> enable_bigartscaleonload3="No";
-   </ label="Enable Flyer Rotate on Selection", help="Enable Flyer Art Rotate on Selection", options="Yes,No", order=68 /> enable_bigartrotate3="No";
-   </ label="Enable Flyer Rotate on Load", help="Enable Flyer Art Rotate on Load", options="Yes,No", order=69 /> enable_bigartrotateonload3="No";
-   </ label="Enable Flyer Fly-in on Selection", help="Enable Flyer Art Fly-in on Selection", options="Yes,No", order=70 /> enable_bigartflyin3="No";
 }  
 
 // Check if the AM version supporting .nomargin property is running
@@ -202,11 +194,20 @@ wheel_fade_ms <- 0;
 try {	wheel_fade_ms = my_config["wheel_fade_ms"].tointeger(); } catch ( e ) { }
 
 
+///////////////////
+// Background Music
+/////////////////////
+if ( my_config["enable_backgroundmusic"] == "Yes") {
+local bgMusic = fe.add_sound("bgMusic.mp3")
+	bgMusic.playing=true
+	bgMusic.loop=true
+}
 
+///////////////////
 // Background Art 
-// This section will display the two different background art 
-// based up on the layout option choice
-if ( my_config["enable_bg"] == "System Flyer" || "Boxart")
+/////////////////////
+
+if ( my_config["enable_bg"] == "System Flyer Pan & Scan" || my_config["enable_bg"] == "Game Flyer Pan & Scan")
 {
 local bgart = PanAndScanImage( "../../menu-art/flyer/[DisplayName]", 0, 0, flw, flh);
 //bgart.trigger = Transition.EndNavigation;
@@ -217,7 +218,8 @@ bgart.set_zoom(4.5, 0.00008);
 bgart.set_animate(::AnimateType.Bounce, 0.50, 0.50)
 bgart.set_randomize_on_transition(false);
 bgart.set_start_scale(1.1);
-if ( my_config["enable_bg"] == "Boxart")
+
+if ( my_config["enable_bg"] == "Game Flyer Pan & Scan")
 {
 local bgart2 = PanAndScanArt( "flyer", 0, 0, flw, flh);
 bgart.trigger = Transition.EndNavigation;
@@ -230,35 +232,64 @@ bgart2.set_randomize_on_transition(false);
 bgart2.set_start_scale(1.1);
 }
 }
-if ( my_config["enable_bg"] == "Hursty HP2") 
+
+if ( my_config["enable_bg"] == "Hursty HP2 Static") 
 {
 local b_art = fe.add_image("../../menu-art/fade-in/[Emulator]", 0, 0, flw, flh );
 b_art.alpha=255;
 }
-if ( my_config["enable_bg"] == "City Lights") 
+if ( my_config["enable_bg"] == "City Lights Slide") 
 {
-local b_art = fe.add_image("backgrounds/City Lights.png", 0, 0, flw, flh );
-b_art.alpha=255;
+local bgflyerslide = fe.add_image("backgrounds/City Lights.png", 0, 0, flw, flh );
+local bgflyerslide2 = fe.add_clone(bgflyerslide);
+//Animation for image bg
+animation.add( PropertyAnimation( bgflyerslide, {when = Transition.StartLayout, property = "x", start = 0, end = -flw, time = 28000, loop=true}));
+animation.add( PropertyAnimation( bgflyerslide2, {when = Transition.StartLayout, property = "x", start = flw, end = 0, time = 28000, loop=true}));			
+animation.add( PropertyAnimation( bgflyerslide2, {when = Transition.StartLayout, property = "alpha", start = 0, end = 255, time = 500}));
 }
 
-if ( my_config["enable_bg"] == "Pixel Skyline") 
+if ( my_config["enable_bg"] == "Pixel Skyline Slide") 
 {
-local b_art = fe.add_image("backgrounds/Pixel Skyline.png", 0, 0, flw, flh );
-b_art.alpha=255;
+local bgflyerslide = fe.add_image("backgrounds/Pixel Skyline.png", 0, 0, flw, flh );
+local bgflyerslide2 = fe.add_clone(bgflyerslide);
+//Animation for image bg
+animation.add( PropertyAnimation( bgflyerslide, {when = Transition.StartLayout, property = "x", start = 0, end = -flw, time = 28000, loop=true}));
+animation.add( PropertyAnimation( bgflyerslide2, {when = Transition.StartLayout, property = "x", start = flw, end = 0, time = 28000, loop=true}));			
+animation.add( PropertyAnimation( bgflyerslide2, {when = Transition.StartLayout, property = "alpha", start = 0, end = 255, time = 500}));
 }
 
-if ( my_config["enable_bg"] == "Pixel Dojo") 
+if ( my_config["enable_bg"] == "Black Logos Slide") 
 {
-local b_art = fe.add_image("backgrounds/Pixel Dojo.png", 0, 0, flw, flh );
-b_art.alpha=255;
+local bgflyerslide = fe.add_image("backgrounds/neon7.jpg", 0, 0, flw, flh );
+bgflyerslide.preserve_aspect_ratio = true;
+local bgflyerslide2 = fe.add_clone(bgflyerslide);
+bgflyerslide2.preserve_aspect_ratio = true;
+//Animation for image bg
+animation.add( PropertyAnimation( bgflyerslide, {when = Transition.StartLayout, property = "x", start = 0, end = -flw, time = 28000, loop=true}));
+animation.add( PropertyAnimation( bgflyerslide2, {when = Transition.StartLayout, property = "x", start = flw, end = 0, time = 28000, loop=true}));			
+animation.add( PropertyAnimation( bgflyerslide2, {when = Transition.StartLayout, property = "alpha", start = 0, end = 255, time = 500}));
+local bgflyerslide = fe.add_image("scanline2.png", 0, 0, flw, flh );
 }
 
-if ( my_config["enable_bg"] == "Neon") 
+if ( my_config["enable_bg"] == "Blue Logos Slide") 
+{
+local bgflyerslide = fe.add_image("backgrounds/logos_blue.png", 0, 0, flw, flh );
+bgflyerslide.preserve_aspect_ratio = true;
+local bgflyerslide2 = fe.add_clone(bgflyerslide);
+bgflyerslide2.preserve_aspect_ratio = true;
+//Animation for image bg
+animation.add( PropertyAnimation( bgflyerslide, {when = Transition.StartLayout, property = "x", start = 0, end = -flw, time = 28000, loop=true}));
+animation.add( PropertyAnimation( bgflyerslide2, {when = Transition.StartLayout, property = "x", start = flw, end = 0, time = 28000, loop=true}));			
+animation.add( PropertyAnimation( bgflyerslide2, {when = Transition.StartLayout, property = "alpha", start = 0, end = 255, time = 500}));
+local bgflyerslide = fe.add_image("scanline2.png", 0, 0, flw, flh );
+}
+
+if ( my_config["enable_bg"] == "Neon Static") 
 {
 local b_art = fe.add_image("backgrounds/Neon.jpg", 0, 0, flw, flh );
 b_art.alpha=255;
 }
-
+/**
 if ( my_config["enable_bg"] == "Per System") 
 {
 local b_art = fe.add_image("backgrounds/[DisplayName]", 0, 0, flw, flh );
@@ -269,6 +300,10 @@ if ( my_config["enable_bg"] == "Per Title")
 local b_art = fe.add_image("backgrounds/[Title].png", 0, 0, flw, flh );
 b_art.alpha=255;
 }
+**/
+//////////////
+//Border
+///////////////
 if ( my_config["enable_border"] == "Yes") {
 // Snap Background
 local flx = ( fe.layout.width - layout_width ) / 2
@@ -289,23 +324,55 @@ bannerBottom.alpha=150;
 local flx = fe.layout.width;
 local fly = fe.layout.height;
 }
-//Overlay Art
-if ( my_config["enable_overlay"] == "Snazzy") 
-{
-local overlay_art = fe.add_image("snazzy/[DisplayName]", 0, 0, flw, flh );
-overlay_art.alpha=my_config["overlay_opacity"].tointeger();
-}
+
 
 /////////////////////
 //Video
 /////////////////////
 
 if ( my_config["videomode"] == "Center") {
+local last_nav = 0;
+local gtime = 0;
+local art_flag = false;
+
+local video = fe.add_image( fe.get_art("snap"),flx*0.2, fly*0.18, flw*0.5, flh*0.65);  //Use add_image so the snap doesn't auto-update while navigating
+
+if ( my_config["enable_backgroundmusic"] == "Yes") {
+local bgMusic = fe.add_sound("bgMusic.mp3")
+video.video_flags = Vid.NoAudio;
+}
+
+video.preserve_aspect_ratio = true;
+fe.add_transition_callback( "my_transition" );
+video.preserve_aspect_ratio = true;
+function my_transition( ttype, var, ttime )
+{
+	if ( ttype == Transition.ToNewSelection )
+	{
+		last_nav = gtime;
+		art_flag = true;
+	}
+}
+
+fe.add_ticks_callback( this, "on_tick" );
+function on_tick( ttime )
+{
+    gtime = ttime;
+	if (art_flag && (ttime - last_nav > 1000))  //800ms delay
+	{
+		video.file_name = fe.get_art("snap");
+		art_flag = false;
+	}
+}
+}
+
+/*****
+if ( my_config["videomode"] == "Center") {
 local snap = FadeArt( "snap", flx*0.12, fly*0.18, flw*0.65, flh*0.65)
 snap.trigger = Transition.EndNavigation;
 snap.preserve_aspect_ratio = true;
 }
-
+*****/
 if ( my_config["videomode"] == "Full Screen") {
 local snap = FadeArt( "snap", 0, 0, flw, flh );
 snap.trigger = Transition.EndNavigation;
@@ -359,133 +426,39 @@ scanline.alpha = 255;
 
 if ( my_config["enable_bigart3"] == "Yes" )
 {
-
-
-///////////////////////////////////////////////////////////////////////////
-if ( my_config["select_bigartposition3"] == "Right" ){
+local last_flyernav = 0;
+local gflyertime = 0;
+local flyer_flag = false;
 local flx = ( fe.layout.width - layout_width ) / 2
 local fly = ( fe.layout.height - layout_height ) / 2
-local bigart = fe.add_artwork(( my_config["select_bigartfolder3"] ), flw + flx - crw - flyerW, bth, flyerW, flyerH );
+local flyer = fe.add_image( fe.get_art("flyer"),flw + flx - crw - flyerW, bth, flyerW, flyerH );  //Use add_image so the snap doesn't auto-update while navigating
+flyer.preserve_aspect_ratio = true;
+fe.add_transition_callback( "my_flyertransition" );
+flyer.preserve_aspect_ratio = true;
+function my_flyertransition( ttype, var, ttime )
+{
+	if ( ttype == Transition.ToNewSelection )
+	{
+		last_flyernav = gflyertime;
+		flyer_flag = true;
+	}
+}
+
+fe.add_ticks_callback( this, "on_flyertick" );
+function on_flyertick( ttime )
+{
+    gflyertime = ttime;
+	if (flyer_flag && (ttime - last_flyernav > 1000))  //800ms delay
+	{
+		flyer.file_name = fe.get_art("flyer");		
+		flyer_flag = false;
+
+	}
+
+}
+}
 local flx = fe.layout.width;
 local fly = fe.layout.height;
-bigart.trigger = Transition.EndNavigation;
-bigart.preserve_aspect_ratio = true;
-
-
-local bigart_rotate_onload = {
-    when = When.StartLayout,
-    when = Transition.ToNewList,
-    property = "rotation",
-    start = 90,
-    end = 0,
-    time = 1500,
-    tween = Tween.Expo
-    loop=false
- }
-
-if ( my_config["enable_bigartrotateonload3"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigart_rotate_onload ) );
-}
-
-local bigartscale_onload = {
-    when = When.StartLayout,
-    when = Transition.ToNewList,
-    property = "scale",
-    start = 0.1,
-    end = 0.8,
-    time = 1000	
-    tween = Tween.Quad,
-}
-
-local bigartfade_onload = {
-    when = When.StartLayout,
-    when = Transition.ToNewList,
-	property = "alpha",
-	delay = 500
-	start = 255,
-	end = 0,
-	time = 2000,
-	pulse = false
-	loop = false
- }
-
-if ( my_config["enable_bigartscaleonload3"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigartscale_onload ) );
-}
-if ( my_config["enable_bigartfadeonload3"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigartfade_onload ) );
-}
-
-local bigartscale = {
-    when = Transition.EndNavigation,
-    property = "scale",
-    start = 1,
-    end = 0.8,
-    time = 500	
-    tween = Tween.Quad,
-	pulse = false
-//	delay = 500
-	
-}
-
-local bigartx = {
-    when = Transition.EndNavigation,
-    property = "x",
-    start = flx*1
-    end = flx*0.65
-    time = 1500,
-    tween = Tween.Expo
-	pulse = false
- }
- 
-local bigartskew_x = {
-    when = Transition.EndNavigation,
-	property = "skew_x",
-	start = 255,
-    end = 0,
-	time = 1500,
-	loop = false
-	pulse = false
- }
- 
-local bigartfade = {
-    when = Transition.EndNavigation,
-	property = "alpha",
-//	delay = 500
-	start = 255,
-	end = 0,
-	time = 4000,
-	pulse = false
-	loop = false
- }
-local bigartrotate = {
-    when = Transition.EndNavigation,
-    property = "rotation",
-    start = 90,
-    end = 0,
-    time = 1500,
-    tween = Tween.Expo
-    loop=false
- }
-
- 
-//Animation
-
-if ( my_config["enable_bigartrotate3"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigartrotate ) );
-}
-if ( my_config["enable_bigartscale3"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigartscale ) );
-}
-if ( my_config["enable_bigartflyin3"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigartx ) );
-animation.add( PropertyAnimation ( bigart, bigartskew_x ) );
-}
-if ( my_config["enable_bigartfade3"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigartfade ) );
-}
-}
-}
 
 /////////////////
 //Game Description
@@ -508,12 +481,12 @@ _my_text=null;
 
 constructor()
 {
-_my_image_bg = fe.add_image( "white.png", flx*0.715, bth, lbw*0.9, (flh - bth - bbh)*0.7 ); 
+_my_image_bg = fe.add_image( "white.png", flx*0.719, bth, lbw, (flh - bth - bbh) ); 
 _my_image_bg.set_rgb(bgRGB[0],bgRGB[1],bgRGB[2])
 _my_image_bg.visible=false;
 _my_image_bg.alpha = 180;
 
-_my_text = fe.add_text("[Overview]", flx*0.715, bth, lbw, flh - bth - bbh );
+_my_text = fe.add_text("[Overview]", flx*0.72, bth, lbw, flh - bth - bbh );
 _my_text.visible=false;
 _my_text.charsize = 22;
 //_my_text.set_rgb( 69, 69, 69 );
