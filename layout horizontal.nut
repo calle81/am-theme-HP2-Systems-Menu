@@ -29,7 +29,7 @@ class UserConfig {
 
 
 	</ label="WHEEL OPTIONS", help="Brought to you by Project HyperPie", order=18 /> uct5=" ";   
-	</ label="Wheel Layout", help="Select wheel type", options="List Box,Horizontal,Horizontal Animated,Vertical Wheel", order=19 /> enable_list_type="List Box";
+	</ label="Wheel Layout", help="Select wheel type", options="List Box,Horizontal,Horizontal Animated,Vertical Wheel", order=19 /> enable_list_horizontal="Horizontal Animated";
 	</ label="Wheel Art Folder", help="The artwork to spin", options="wheel, marquee, flyer, fanart, cartart, boxart", order=20 /> orbit_art="wheel";
 	</ label="Wheel Transition Time", help="Time in milliseconds for wheel spin.", order=21 /> transition_ms="35";  
 	</ label="Wheel Fade Time", help="Time in milliseconds to fade the wheel.", options="Off,2500,5000,7500,10000,12500,15000,17500,20000,22500,25000,27500,30000", order=22 /> wheel_fade_ms="2500";
@@ -643,7 +643,29 @@ if ( my_config["enable_backgroundoverlay"] == "Diagonal")
 {
 local bgflyerslide = fe.add_image("scanline2.png", 0, 0, flw, flh );
 }
+//////////////
+//Border
+///////////////
+if ( my_config["enable_border"] == "Yes") {
+// Snap Background
+local flx = ( fe.layout.width - layout_width ) / 2
+local fly = ( fe.layout.height - layout_height ) / 2
+//local snapBackground = fe.add_image( "images/gradientV.png", flx, bth, flw - crw, flh - bth - bbh )
+//snapBackground.set_rgb( bgRGB[0] * 0.6, bgRGB[1] * 0.6, bgRGB[2] * 0.6 )
+//snapBackground.alpha=100;
 
+ // Top Background
+local bannerTop = fe.add_image( "white.png", flx, 0, flw, bth)
+bannerTop.set_rgb( bgRGB[0], bgRGB[1], bgRGB[2] )
+bannerTop.alpha=150;
+
+// Bottom Background
+local bannerBottom = fe.add_image( "white.png", flx, flh - bbh, flw, bbh)
+bannerBottom.set_rgb( bgRGB[0], bgRGB[1], bgRGB[2] )
+bannerBottom.alpha=150;
+local flx = fe.layout.width;
+local fly = fe.layout.height;
+}
 
 
 /////////////////////
@@ -778,16 +800,12 @@ local fly = fe.layout.height;
 //Game Description
 ////////////////
 if ( my_config["select_description"] == "Right" ) {
-
-local image_bg = fe.add_image( "white.png", flx*0.719, bth, lbw, (flh - bth - bbh) ); 
-
-image_bg.set_rgb(bgRGB[0],bgRGB[1],bgRGB[2])
-image_bg.alpha = 200;
-local text = fe.add_text("[Overview]", flx*0.72, fly*0.13, flw*0.26, flh*0.7);
-text.charsize = flx*0.015;
-text.align = Align.Left;
-text.word_wrap = true;
-text.alpha = 255;
+local gtext = fe.add_text("[Overview]", flx*0.77, fly*0.2, flw*0.20, flh*0.24 );
+gtext.set_rgb( 255, 255, 255 );
+gtext.align = Align.Left;
+gtext.charsize = 25;
+gtext.rotation = 0;
+gtext.word_wrap = true;
 }
 
 /////////
@@ -806,7 +824,7 @@ _my_image_bg.alpha = 180;
 
 _my_text = fe.add_text("[Overview]", flx*0.72, bth, lbw, flh - bth - bbh );
 _my_text.visible=false;
-_my_text.charsize = flx*0.015;
+_my_text.charsize = 22;
 //_my_text.set_rgb( 69, 69, 69 );
 _my_text.align = Align.Left;
 _my_text.word_wrap = true;
@@ -1109,9 +1127,9 @@ animation.add( PropertyAnimation ( bigart, bigartfade ) );
 ///////////////////////
 //wheel overlay
 ///////////////////////
-if ( my_config["enable_list_type"] == "Vertical Wheel" )
+if ( my_config["enable_list_horizontal"] == "Vertical Wheel" )
 {
-local wheelOverlay = fe.add_image ("white.png", flx*0.84, 0, flw*0.25, fly)
+local wheelOverlay = fe.add_image ("white.png", flx*0.7, 0, flw*0.32, fly)
 wheelOverlay.set_rgb(lbgRGB[0],lbgRGB[1],lbgRGB[2])
 wheelOverlay.alpha = 200;
  local wheelOverlayFade = {
@@ -1138,36 +1156,14 @@ wheelOverlay.alpha = 200;
 animation.add( PropertyAnimation ( wheelOverlay, wheelOverlayFade ) );
 animation.add( PropertyAnimation ( wheelOverlay, wheelOverlayFadeLoad ) );
  }
-//////////////
-//Border
-///////////////
-if ( my_config["enable_border"] == "Yes") {
-// Snap Background
-local flx = ( fe.layout.width - layout_width ) / 2
-local fly = ( fe.layout.height - layout_height ) / 2
-//local snapBackground = fe.add_image( "images/gradientV.png", flx, bth, flw - crw, flh - bth - bbh )
-//snapBackground.set_rgb( bgRGB[0] * 0.6, bgRGB[1] * 0.6, bgRGB[2] * 0.6 )
-//snapBackground.alpha=100;
 
- // Top Background
-local bannerTop = fe.add_image( "white.png", flx, 0, flw, bth)
-bannerTop.set_rgb( bgRGB[0], bgRGB[1], bgRGB[2] )
-bannerTop.alpha=150;
-
-// Bottom Background
-local bannerBottom = fe.add_image( "white.png", flx, flh - bbh, flw, bbh)
-bannerBottom.set_rgb( bgRGB[0], bgRGB[1], bgRGB[2] )
-bannerBottom.alpha=150;
-local flx = fe.layout.width;
-local fly = fe.layout.height;
-}
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // The following section sets up what type and wheel and displays the users choice
 
-if ( my_config["enable_list_type"] != "List Box" ){
+if ( my_config["enable_list_horizontal"] != "List Box" ){
 //Low horizontal
 
-if ( my_config["enable_list_type"] == "Horizontal" )
+if ( my_config["enable_list_horizontal"] == "Horizontal" )
 {
 fe.load_module( "conveyor" );
 local wheel_x = [ -flx*0.45, -flx*0.3, -flx*0.2, -flx*0.04, flx*0.12 flx*0.28, flx*0.44, flx*0.6, flx*0.76 flx*0.92, flx*1.08, flx*1.24 ];
@@ -1230,8 +1226,8 @@ local point = fe.add_image("pointerh.png", flx*0.403, fly*0.8, flw*0.2, flh*0.35
 local alpha_cfg = {
     when = Transition.ToNewSelection,
     property = "alpha",
-    start = 255,
-    end = 0,
+    start = 110,
+    end = 255,
     time = 300
 }
 animation.add( PropertyAnimation( point, alpha_cfg ) );
@@ -1256,7 +1252,7 @@ animation.add( PropertyAnimation( point, movex_cfg ) );
 }
 }
 //Low horizontal Animated
-if ( my_config["enable_list_type"] == "Horizontal Animated" )
+if ( my_config["enable_list_horizontal"] == "Horizontal Animated" )
 {
 fe.load_module( "conveyor" );
 local wheel_x = [ -flx*0.45, -flx*0.3, -flx*0.2, -flx*0.04, flx*0.12 flx*0.28, flx*0.44, flx*0.6, flx*0.76 flx*0.92, flx*1.08, flx*1.24 ];
@@ -1319,8 +1315,8 @@ local point = fe.add_image("pointerh.png", flx*0.403, fly*0.8, flw*0.2, flh*0.35
 local alpha_cfg = {
     when = Transition.ToNewSelection,
     property = "alpha",
-    start = 255,
-    end = 0,
+    start = 110,
+    end = 255,
     time = 300
 }
 animation.add( PropertyAnimation( point, alpha_cfg ) );
@@ -1346,37 +1342,10 @@ animation.add( PropertyAnimation( point, movex_cfg ) );
 }
  
  //This enables vertical art instead of default wheel
-if ( my_config["enable_list_type"] == "Vertical Wheel" )
+if ( my_config["enable_list_horizontal"] == "Vertical Wheel" )
 {
-{ 
-
-//property animation - wheel pointers
-
-
-local point = fe.add_image("pointer.png", flx*0.89, fly*0.34, flw*0.2, flh*0.35);
-
-local alpha_cfg = {
-    when = Transition.ToNewSelection,
-    property = "alpha",
-    start = 255,
-    end = 0,
-    time = 300
-}
-animation.add( PropertyAnimation( point, alpha_cfg ) );
-
-
-
-local movex_cfg = {
-    when = Transition.ToNewSelection,
-    property = "x",
-    start = flx*0.885,
-    end = point.x,
-    time = 200	
-}	
-animation.add( PropertyAnimation( point, movex_cfg ) );
-}
 fe.load_module( "conveyor" );
-local wheel_x = [ flx*0.85, flx*0.85, flx*0.85, flx*0.85, flx*0.85, flx*0.85, flx*0.85, flx*0.85, flx*0.85, flx*0.85, flx*0.85, flx*0.85, ]; 
+local wheel_x = [ flx*0.79, flx*0.79, flx*0.79, flx*0.79, flx*0.79, flx*0.79, flx*0.79, flx*0.79, flx*0.79, flx*0.79, flx*0.79, flx*0.79, ]; 
 local wheel_y = [ -fly*0.210, -fly*0.105, fly*0.0, fly*0.105, fly*0.210, fly*0.315, fly*0.420, fly*0.525, fly*0.630 fly*0.735, fly*0.840, fly*0.945, ];
 local wheel_w = [ flw*0.13, flw*0.13, flw*0.13, flw*0.13, flw*0.13, flw*0.13, flw*0.13, flw*0.13, flw*0.13, flw*0.13, flw*0.13, flw*0.13, ];
 local wheel_a = [  0,  0,  0,  255,  255,  255, 255,  255,  255,  0,  0,  0, ];
@@ -1427,7 +1396,40 @@ conveyor.set_slots( wheel_entries );
 conveyor.transition_ms = 50;
 try { conveyor.transition_ms = my_config["transition_ms"].tointeger(); } catch ( e ) { }
 
+{ 
 
+//property animation - wheel pointers
+
+
+local point = fe.add_image("pointer.png", flx*0.88, fly*0.34, flw*0.2, flh*0.35);
+
+local alpha_cfg = {
+    when = Transition.ToNewSelection,
+    property = "alpha",
+    start = 110,
+    end = 255,
+    time = 300
+}
+animation.add( PropertyAnimation( point, alpha_cfg ) );
+
+local movey_cfg = {
+    when = Transition.ToNewSelection,
+    property = "y",
+    start = point.y,
+    end = point.y,
+    time = 200
+}
+animation.add( PropertyAnimation( point, movey_cfg ) );
+
+local movex_cfg = {
+    when = Transition.ToNewSelection,
+    property = "x",
+    start = flx*0.87,
+    end = point.x,
+    time = 200	
+}	
+animation.add( PropertyAnimation( point, movex_cfg ) );
+}
 }
 conveyor.preserve_aspect_ratio = true;
 }
@@ -1436,7 +1438,7 @@ conveyor.preserve_aspect_ratio = true;
 ///
 ///Animated Wheel Options
 ///////////////////////////////////////////////////////////////////////////
-if ( my_config["enable_list_type"] == "Horizontal Animated" ){
+if ( my_config["enable_list_horizontal"] == "Horizontal Animated" ){
 local bigart = fe.add_artwork(( my_config["orbit_art"] ), flx*0.44, fly*0.82, flw*0.12, flh*0.2);
 bigart.preserve_aspect_ratio = true;
 
@@ -1553,7 +1555,7 @@ animation.add( PropertyAnimation ( bigart, bigartfade ) );
 }
 }
 ////////////////////////////////////
-if ( my_config["enable_list_type"] == "Horizontal Low Big Animated" ){
+if ( my_config["enable_list_horizontal"] == "Horizontal Low Big Animated" ){
 local bigart = fe.add_artwork(( my_config["orbit_art"] ), flx*0.44, fly*0.59, flw*0.22, flh*0.37);
 bigart.preserve_aspect_ratio = true;
 
@@ -1676,9 +1678,9 @@ animation.add( PropertyAnimation ( bigart, bigartfade ) );
 /////Wheel fading
 ///////////////////////////
 
-if ( (my_config["enable_list_type"] == "Vertical Wheel" ) || ( my_config["enable_list_type"] == "Horizontal Boxart" ))
+if ( (my_config["enable_list_horizontal"] == "Vertical Wheel" ) || ( my_config["enable_list_horizontal"] == "Horizontal Boxart" ))
 {
-if ( wheel_fade_ms > 0 && ( my_config["enable_list_type"] == "Wheel Right" || my_config["enable_list_type"] == "Vertical Wheel" || my_config["enable_list_type"] == "Vertical Wheel Left" || my_config["enable_list_type"] == "Wheel Left" || my_config["enable_list_type"] == "Horizontal Low" || my_config["enable_list_type"] == "Horizontal Center" || my_config["enable_list_type"] == "Horizontal Low Animated" || my_config["enable_list_type"] == "Horizontal Low Big") || my_config["enable_list_type"] == "Horizontal Low Big Animated" )
+if ( wheel_fade_ms > 0 && ( my_config["enable_list_horizontal"] == "Wheel Right" || my_config["enable_list_horizontal"] == "Vertical Wheel" || my_config["enable_list_horizontal"] == "Vertical Wheel Left" || my_config["enable_list_horizontal"] == "Wheel Left" || my_config["enable_list_horizontal"] == "Horizontal Low" || my_config["enable_list_horizontal"] == "Horizontal Center" || my_config["enable_list_horizontal"] == "Horizontal Low Animated" || my_config["enable_list_horizontal"] == "Horizontal Low Big") || my_config["enable_list_horizontal"] == "Horizontal Low Big Animated" )
 {
 	
 	function wheel_fade_transition( ttype, var, ttime )
@@ -1783,7 +1785,7 @@ favouriteIcon.set_rgb( gslRGB[0], gslRGB[1], gslRGB[2] )
  
 // Game Title
 if ( my_config["enable_title"] == "Yes") {
-if (( my_config["enable_list_type"] == "Horizontal"  ) || ( my_config["enable_list_type"] == "Horizontal Animated") || ( my_config["enable_list_type"] == "Horizontal Boxart")){
+if (( my_config["enable_list_horizontal"] == "Horizontal"  ) || ( my_config["enable_list_horizontal"] == "Horizontal Animated") || ( my_config["enable_list_horizontal"] == "Horizontal Boxart")){
 local gameTitleW = (flw - crw - bbm - bbm)*0.5
 local gameTitleH = (floor( bbh * 0.35 ) )*0.5
 local gameTitle = fe.add_text( "[Title]", (flx + bbm), (flh - bbh + bbm)*0.02, gameTitleW, gameTitleH )
@@ -1863,7 +1865,7 @@ if ( my_config["fadeWheelTitle"] == "Yes" ){
 	}
 
 }
-if (( my_config["enable_list_type"] == "Vertical Wheel"  ) || ( my_config["enable_list_type"] == "List Box")){
+if (( my_config["enable_list_horizontal"] == "Vertical Wheel"  ) || ( my_config["enable_list_horizontal"] == "List Box")){
 local gameTitleW = flw - crw - bbm - bbm
 local gameTitleH = floor( bbh * 0.35 ) 
 local gameTitle = fe.add_text( "[Title]", flx + bbm, flh - bbh + bbm, gameTitleW, gameTitleH )
@@ -1943,7 +1945,7 @@ if ( my_config["fadeWheelTitle"] == "Yes" ){
 	}
 }
 }
-if (( my_config["enable_list_type"] == "Vertical Wheel"  ) || ( my_config["enable_list_type"] == "List Box")){
+if (( my_config["enable_list_horizontal"] == "Vertical Wheel"  ) || ( my_config["enable_list_horizontal"] == "List Box")){
 
 ///////////
 //System Image
@@ -1997,7 +1999,7 @@ playCountText.charsize = floor(playCountText.height * 1000/700 * 0.6)
 playCountText.font = "BebasNeueBold.otf"
 }
 
-if (( my_config["enable_list_type"] == "Horizontal"  ) || ( my_config["enable_list_type"] == "Horizontal Animated") || ( my_config["enable_list_type"] == "Horizontal Boxart")){
+if (( my_config["enable_list_horizontal"] == "Horizontal"  ) || ( my_config["enable_list_horizontal"] == "Horizontal Animated") || ( my_config["enable_list_horizontal"] == "Horizontal Boxart")){
 // Genre
 local genreImageH = bbh - bbm * 2
 local genreImageW = floor( genreImageH * 1.125 )
@@ -2124,7 +2126,7 @@ fe.add_transition_callback( this, "on_transition" )
 
 function on_transition( ttype, var, ttime ) {
 	if( ttype == Transition.ToNewSelection) {
-	if ( my_config["enable_list_type"] == "List Box" ){
+	if ( my_config["enable_list_horizontal"] == "List Box" ){
 			gameListBoxAnimX.to = flw + flx - crw - lbw
 			if ( glist_delay != 0 ) gameListBoxAnimX.hide( flw + flx - crw, fe.layout.time )
 			gameListBoxAnimA.to = 255
