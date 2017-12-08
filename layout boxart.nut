@@ -667,7 +667,7 @@ local last_nav = 0;
 local gtime = 0;
 local art_flag = false;
 
-local video = fe.add_image( fe.get_art("snap"),flx*0.3, fly*0.08, flw*0.4, flh*0.6 );  //Use add_image so the snap doesn't auto-update while navigating
+local video = fe.add_image( fe.get_art("snap"),flx*0.3, fly*0.1, flw*0.4, flh*0.54 );  //Use add_image so the snap doesn't auto-update while navigating
 
 if ( my_config["select_backgroundmusic"] == "Yes") {
 local bgMusic = fe.add_sound("bgMusic.mp3")
@@ -1829,6 +1829,8 @@ local wheelImage = fe.add_artwork( "wheel" ,(flx + bbm)*4, (bth - floor( wheelIm
 wheelImage.trigger = Transition.EndNavigation;
 wheelImage.preserve_aspect_ratio = true
 
+
+
 // Category
 local categoryW = floor( bth * 2.5 )
 local categoryH = floor( bth * 0.25 )
@@ -1911,7 +1913,7 @@ fe.add_transition_callback( this, "on_transition" )
 
 function on_transition( ttype, var, ttime ) {
 	if( ttype == Transition.ToNewSelection) {
-	if ( my_config["select_list_box"] == "List Box" ){
+	if ( my_config["enable_list_vertical"] == "List Box" ){
 			gameListBoxAnimX.to = flw + flx - crw - lbw
 			if ( glist_delay != 0 ) gameListBoxAnimX.hide( flw + flx - crw, fe.layout.time )
 			gameListBoxAnimA.to = 255
@@ -1934,14 +1936,7 @@ function on_transition( ttype, var, ttime ) {
 		update_artwork = true	
 		update_counter = 0
 
-		if ( glist_delay != 0 ) gameListBoxAnimX.hide( flw + flx - crw, fe.layout.time )
-		gameListBoxAnimA.from = 0
-		gameListBoxAnimA.to = 255
-		if ( glist_delay != 0 ) gameListBoxAnimA.hide( 0, fe.layout.time )
-		if ( glist_delay != 0 ) gameListBoxBackgroundAnimX.hide( flw + flx - crw, fe.layout.time )
-		gameListBoxBackgroundAnimA.from = 0
-		gameListBoxBackgroundAnimA.to = 255
-		if ( glist_delay != 0 ) gameListBoxBackgroundAnimA.hide( 0, fe.layout.time )
+
 		
 		if ( var < 0 ) {
 //			gameListBoxAnimX.from = flw + flx - crw - lbw * 2
@@ -1991,7 +1986,6 @@ function on_transition( ttype, var, ttime ) {
 	}
 
 
-
 	//Display current time
 if ( my_config["select_clock"] == "Yes" ){
   local dt = fe.add_text( "", flw*0.65, flh*0.03, flw*0.3, flh*0.095 );
@@ -2033,7 +2027,67 @@ function fade_transitions( ttype, var, ttime ) {
  return false;
 }
 
+fe.add_transition_callback( "fade_transitions" );
 
+//View name
+
+local mfliter2W = (flw - crw - bbm - floor( bbh * 2.875 ))
+local mfliter2H = floor( bbh * 0.15 )
+
+ ::OBJECTS <- {
+mbg = fe.add_image( "backgrounds/Logos/Light Blue.png", 0, 0, fe.layout.width, fe.layout.height ),
+msystem = fe.add_image( "../../menu-art/flyer/[DisplayName]", flw*0.3, flh*0.5, flw*0.4, flh*0.4 ),
+mwhiteline = fe.add_image( "white.png", 0, flh*0.3, fe.layout.width, flh*0.15 ),
+mfliter = fe.add_text( "[DisplayName]", 0, flh*0.3, fe.layout.width, flh*0.1 ),
+mfliter2 = fe.add_text( "Box Art View", 0, flh*0.4, fe.layout.width, mfliter2H ),
+}
+OBJECTS.mbg.alpha = 200;
+OBJECTS.mbg.preserve_aspect_ratio = true;
+OBJECTS.msystem.preserve_aspect_ratio = true;
+OBJECTS.mwhiteline.set_rgb( bgRGB[0], bgRGB[1], bgRGB[2] )
+OBJECTS.mfliter.align = Align.Centre;
+OBJECTS.mfliter.set_rgb(titRGB[0],titRGB[1],titRGB[2])
+OBJECTS.mfliter.alpha = 0;
+OBJECTS.mfliter.style = Style.Regular
+OBJECTS.mfliter.font = "BebasNeueBold.otf"
+OBJECTS.mfliter2.charsize = floor(OBJECTS.mfliter2.height * 1000/700)
+OBJECTS.mfliter2.style = Style.Regular
+OBJECTS.mfliter2.font = flh <= 600 ? "BebasNeueRegular.otf": "BebasNeueBook.otf"
+
+ local movein_mbg = {
+   when =  Transition.StartLayout ,property = "alpha", start = 255, end = 255, time = 1000
+}
+
+ local moveout_mbg = {
+    when = Transition.StartLayout ,property = "alpha", start = 255, end = 0, time = 700, delay = 1000
+}
+
+ local movein_msysfliter = {
+   when =  Transition.StartLayout, property = "alpha", start = 50, end = 255, time = 1000
+}
+
+ local moveout_msysfliter = {
+    when = Transition.StartLayout ,property = "alpha", start = 255, end = 0, time = 700, delay = 1000
+}
+
+
+ local movein_mwhiteline = {
+   when =  Transition.StartLayout, property = "alpha", start = 50, end = 150, time = 1000
+}
+
+ local moveout_mwhiteline = {
+    when = Transition.StartLayout ,property = "alpha", start = 150, end = 0, time = 700, delay = 1000
+}
+animation.add( PropertyAnimation( OBJECTS.mbg, movein_mbg ) );
+animation.add( PropertyAnimation( OBJECTS.mbg, moveout_mbg ) );
+animation.add( PropertyAnimation( OBJECTS.msystem, movein_msysfliter ) );
+animation.add( PropertyAnimation( OBJECTS.msystem, moveout_msysfliter ) );
+animation.add( PropertyAnimation( OBJECTS.mwhiteline,  movein_mwhiteline ) );
+animation.add( PropertyAnimation( OBJECTS.mwhiteline,  moveout_mwhiteline) );
+animation.add( PropertyAnimation( OBJECTS.mfliter, movein_msysfliter ) );
+animation.add( PropertyAnimation( OBJECTS.mfliter, moveout_msysfliter ) );
+animation.add( PropertyAnimation( OBJECTS.mfliter2, movein_msysfliter ) );
+animation.add( PropertyAnimation( OBJECTS.mfliter2, moveout_msysfliter ) );
 //
 // Fade_in Module
 //

@@ -1226,29 +1226,32 @@ local point = fe.add_image("pointerh.png", flx*0.403, fly*0.8, flw*0.2, flh*0.35
 local alpha_cfg = {
     when = Transition.ToNewSelection,
     property = "alpha",
-    start = 110,
-    end = 255,
-    time = 300
+    start = 255,
+	end = 255,
+	time = 1,
 }
 animation.add( PropertyAnimation( point, alpha_cfg ) );
 
-local movey_cfg = {
-    when = Transition.ToNewSelection,
-    property = "y",
-    start = point.y,
-    end = point.y,
-    time = 200
+local alphaendnav_cfg = {
+    when = Transition.EndNavigation,
+	property = "alpha",
+	start = 200,
+	end = 0,
+	time = 1,
+	delay = 2700,
+	pulse = false
+	loop = false
 }
-animation.add( PropertyAnimation( point, movey_cfg ) );
+animation.add( PropertyAnimation( point, alphaendnav_cfg ) );
 
-local movex_cfg = {
-    when = Transition.ToNewSelection,
-    property = "y",
-    start = fly*0.79,
-    end = point.y,
-    time = 200	
-}	
-animation.add( PropertyAnimation( point, movex_cfg ) );
+local alphaload_cfg = {
+    when = Transition.ToNewList,
+    property = "alpha",
+    start = 255,
+    end = 0,
+    time = 1000
+}
+animation.add( PropertyAnimation( point, alphaload_cfg ) );
 }
 }
 //Low horizontal Animated
@@ -1315,29 +1318,32 @@ local point = fe.add_image("pointerh.png", flx*0.403, fly*0.8, flw*0.2, flh*0.35
 local alpha_cfg = {
     when = Transition.ToNewSelection,
     property = "alpha",
-    start = 110,
-    end = 255,
-    time = 300
+    start = 255,
+	end = 255,
+	time = 1,
 }
 animation.add( PropertyAnimation( point, alpha_cfg ) );
 
-local movey_cfg = {
-    when = Transition.ToNewSelection,
-    property = "y",
-    start = point.y,
-    end = point.y,
-    time = 200
+local alphaendnav_cfg = {
+    when = Transition.EndNavigation,
+	property = "alpha",
+	start = 200,
+	end = 0,
+	time = 1,
+	delay = 2700,
+	pulse = false
+	loop = false
 }
-animation.add( PropertyAnimation( point, movey_cfg ) );
+animation.add( PropertyAnimation( point, alphaendnav_cfg ) );
 
-local movex_cfg = {
-    when = Transition.ToNewSelection,
-    property = "y",
-    start = fly*0.79,
-    end = point.y,
-    time = 200	
-}	
-animation.add( PropertyAnimation( point, movex_cfg ) );
+local alphaload_cfg = {
+    when = Transition.ToNewList,
+    property = "alpha",
+    start = 255,
+    end = 0,
+    time = 1000
+}
+animation.add( PropertyAnimation( point, alphaload_cfg ) );
 }
 }
  
@@ -1945,8 +1951,6 @@ if ( my_config["fadeWheelTitle"] == "Yes" ){
 	}
 }
 }
-if (( my_config["enable_list_horizontal"] == "Vertical Wheel"  ) || ( my_config["enable_list_horizontal"] == "List Box")){
-
 ///////////
 //System Image
 //////////
@@ -1973,6 +1977,9 @@ local genreImageH = bbh - bbm * 2
 local genreImageW = floor( genreImageH * 1.125 )
 local genreImage = fe.add_image("images/unknown.png", flx + flw - crw - genreImageW - bbm, flh - bbh + bbm, genreImageW, genreImageH )
 GenreImage(genreImage)
+if (( my_config["enable_list_horizontal"] == "Vertical Wheel"  ) || ( my_config["enable_list_horizontal"] == "List Box")){
+
+
 
 
 // Players
@@ -2235,22 +2242,14 @@ function update_clock( ttime ){
 function fade_transitions( ttype, var, ttime ) {
  switch ( ttype ) {
   case Transition.ToNewSelection:
+//  case Transition.ToNewList:
 	local Wheelclick = fe.add_sound("Click.mp3")
 	      Wheelclick.playing=true
   break;
   case Transition.ToGame:
-  	local Selection = fe.add_sound("selection.mp3")
-	      Selection.playing=true
-	break;
-  case Transition.FromGame:
-//  	local bgMusic = fe.add_sound("bgMusic.mp3")
-//		bgMusic.playing=true
-    break;
   case Transition.ToNewList:
-	local Selection = fe.add_sound("selection.mp33")
-	      Selection.playing=true
-//	local bgMusic = fe.add_sound("bgMusic.mp3")
-//		bgMusic.playing=true
+	local Wheelclick = fe.add_sound("selection.mp3")
+	      Wheelclick.playing=true
   break;
   }
  return false;
@@ -2258,10 +2257,66 @@ function fade_transitions( ttype, var, ttime ) {
 
 fe.add_transition_callback( "fade_transitions" );
 
+//View name
+
+local mfliter2W = (flw - crw - bbm - floor( bbh * 2.875 ))
+local mfliter2H = floor( bbh * 0.15 )
+
+ ::OBJECTS <- {
+mbg = fe.add_image( "backgrounds/Logos/Light Blue.png", 0, 0, fe.layout.width, fe.layout.height ),
+msystem = fe.add_image( "../../menu-art/flyer/[DisplayName]", flw*0.3, flh*0.5, flw*0.4, flh*0.4 ),
+mwhiteline = fe.add_image( "white.png", 0, flh*0.3, fe.layout.width, flh*0.15 ),
+mfliter = fe.add_text( "[DisplayName]", 0, flh*0.3, fe.layout.width, flh*0.1 ),
+mfliter2 = fe.add_text( "Horizontal Wheel View", 0, flh*0.4, fe.layout.width, mfliter2H ),
+}
+OBJECTS.mbg.alpha = 200;
+OBJECTS.mbg.preserve_aspect_ratio = true;
+OBJECTS.msystem.preserve_aspect_ratio = true;
+OBJECTS.mwhiteline.set_rgb( bgRGB[0], bgRGB[1], bgRGB[2] )
+OBJECTS.mfliter.align = Align.Centre;
+OBJECTS.mfliter.set_rgb(titRGB[0],titRGB[1],titRGB[2])
+OBJECTS.mfliter.alpha = 0;
+OBJECTS.mfliter.style = Style.Regular
+OBJECTS.mfliter.font = "BebasNeueBold.otf"
+OBJECTS.mfliter2.charsize = floor(OBJECTS.mfliter2.height * 1000/700)
+OBJECTS.mfliter2.style = Style.Regular
+OBJECTS.mfliter2.font = flh <= 600 ? "BebasNeueRegular.otf": "BebasNeueBook.otf"
+
+ local movein_mbg = {
+   when =  Transition.StartLayout ,property = "alpha", start = 255, end = 255, time = 1000
+}
+
+ local moveout_mbg = {
+    when = Transition.StartLayout ,property = "alpha", start = 255, end = 0, time = 700, delay = 1000
+}
+
+ local movein_msysfliter = {
+   when =  Transition.StartLayout, property = "alpha", start = 50, end = 255, time = 1000
+}
+
+ local moveout_msysfliter = {
+    when = Transition.StartLayout ,property = "alpha", start = 255, end = 0, time = 700, delay = 1000
+}
 
 
+ local movein_mwhiteline = {
+   when =  Transition.StartLayout, property = "alpha", start = 50, end = 150, time = 1000
+}
+
+ local moveout_mwhiteline = {
+    when = Transition.StartLayout ,property = "alpha", start = 150, end = 0, time = 700, delay = 1000
+}
+animation.add( PropertyAnimation( OBJECTS.mbg, movein_mbg ) );
+animation.add( PropertyAnimation( OBJECTS.mbg, moveout_mbg ) );
+animation.add( PropertyAnimation( OBJECTS.msystem, movein_msysfliter ) );
+animation.add( PropertyAnimation( OBJECTS.msystem, moveout_msysfliter ) );
+animation.add( PropertyAnimation( OBJECTS.mwhiteline,  movein_mwhiteline ) );
+animation.add( PropertyAnimation( OBJECTS.mwhiteline,  moveout_mwhiteline) );
+animation.add( PropertyAnimation( OBJECTS.mfliter, movein_msysfliter ) );
+animation.add( PropertyAnimation( OBJECTS.mfliter, moveout_msysfliter ) );
+animation.add( PropertyAnimation( OBJECTS.mfliter2, movein_msysfliter ) );
+animation.add( PropertyAnimation( OBJECTS.mfliter2, moveout_msysfliter ) );
 //
 // Fade_in Module
 //
 fe.load_module("fade_in.nut");
-

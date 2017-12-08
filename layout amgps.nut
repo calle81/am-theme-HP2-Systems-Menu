@@ -13,7 +13,7 @@ class UserConfig </ help="Navigation controls: Up/Down (to move up and down) and
 	  
       </ label="Blue (B) (0-255) Color", help="Value of blue component for theme color", order=3 />
 	  blue = 0;
-	  
+	</ label="Clock", help="Enable Clock", options="Yes,No", order=15 /> enable_clock="Yes";
 	</ label="Background Image", help="Select theme background", options="Game Flyer, System Flyer, City Lights, Pixel Skyline, Grid Logos Dark Blue, Grid Logos Dark Grey, Grid Logos Green, Grid Logos Light Blue, Grid Logos Light Grey, Grid Logos Mid Blue, Grid Logos Mid Blue, Grid Logos Orange, Grid Logos Pink, Grid Logos Purple, Grid Logos Red, Grid Logos Turquoise, Grid Logos Yellow, Logos Dark Blue, Logos Dark Grey, Logos Green, Logos Light Blue, Logos Light Grey, Logos Light Turquoise, Logos Mid Blue, Logos Orange, Logos Pink, Logos Purple, Logos Red, Logos Turquoise, Logos Yellow, Mono Logos Blue, Mono Logos Black, Neon, None", order=4 /> select_bg="Logos Light Blue";
 	</ label="Background Image Scanline Overlay", help="select Background Image Scanline Overlay", options="Light, Medium, Dark, Diagonal, No", order=5 /> select_backgroundoverlay="Light"; 
 	</ label="Border Overlay", help="select Border Overlay", options="Yes,No", order=8 /> select_border="Yes"; 	
@@ -36,6 +36,9 @@ class UserConfig </ help="Navigation controls: Up/Down (to move up and down) and
 	  
       </ label="Transition Time", help="The amount of time (in milliseconds) that it takes to scroll to another grid entry", order=9 />
 	  ttime = "200";	  		  
+	  </ label="Page Jumps", help="Value of page size", order=10 />
+	  pages = 50;	
+	  		  
 }
 
 // modules
@@ -67,6 +70,7 @@ local flyerH = flh - bth - bbh
 local flyerW = lbw
 local update_artwork = false
 local update_counter = 0
+local pageSize = abs(("0"+my_config["pages"]).tointeger());
 
 local cr_en = false
 local crw = 0
@@ -584,7 +588,7 @@ local bgflyerslide = fe.add_image("scanline2.png", 0, 0, flw, flh );
 
 
 
-local bannerTop = fe.add_image("white.png",0, 0, flw, 25 )
+local bannerTop = fe.add_image("white.png",0, 0, flw, 32 )
 bannerTop.set_rgb( bgRGB[0], bgRGB[1], bgRGB[2] )
 bannerTop.alpha=150;
 
@@ -598,8 +602,9 @@ const PAD=4;
 function nameyear(offset) {
 	local name = fe.game_info(Info.Title, offset);
 	local year = fe.game_info(Info.Year, offset);
-	if ((name.len() > 0) && (year.len() > 0))
-		return name + " (" + year + ")";
+	local manufacturer = fe.game_info(Info.Manufacturer, offset);
+	if ((name.len() > 0) && (year.len() > 0) && (manufacturer.len() > 0))
+		return name + " © " + year + " " + manufacturer;
 	return name;
 }
 
@@ -611,7 +616,6 @@ class Grid extends Conveyor
 	name_t=null;	
 	sel_x=0;
 	sel_y=0;
-	listB=null;
 	list=null;
     
     	ui_counter=null;
@@ -647,27 +651,23 @@ class Grid extends Conveyor
         snap_t = fe.add_artwork("snap", 700, 55, 300, 300);
 	snap_t.trigger = Transition.EndNavigation;
 
-        frame = fe.add_image("frame2.png", width * 2, height * 2, width - 6, height - 17);
-
+    frame = fe.add_image("frame2.png", width * 2, height * 2, width - 6, height - 17);
+	frame.set_rgb (gslRGB[0],gslRGB[1],gslRGB[2])
 	fav_t = fe.add_image("fav.png", 190, 684, 20, 20);
 	fav_t.visible = false;        
 
-        name_t = fe.add_text("[!nameyear]", 190, 676, 900, 35);
+        name_t = fe.add_text("[!nameyear]", 190, 676, 900, 45);
         name_t.font = "BebasNeueBold.otf";
-        name_t.set_rgb( 220, 220, 220 );
+        name_t.set_rgb(titRGB[0],titRGB[1],titRGB[2]);
 
         ui_banner = fe.add_image("banner.png", -300, 65, 280, 70);
 
-        listB = fe.add_text("[ListEntry]/[ListSize]", -381, 81, 300, 50);
-        listB.set_rgb(238, 236, 0);
-        listB.font = "arctik 5";
-        listB.align = Align.Left;
-        listB.set_rgb(0, 0, 0);
-
-        list = fe.add_text("[ListEntry]/[ListSize]", -380, 80, 300, 50);
-        list.set_rgb(238, 236, 0);
-        list.font = "arctik 5";
+        list = fe.add_text("Game [ListEntry]/[ListSize]", flx*0.7, flh*0.0005, flw*0.2, flh*0.045);
+        list.style = Style.Bold
+		list.font = "BebasNeueLight.otf"
         list.align = Align.Left;
+        list.set_rgb(titRGB[0],titRGB[1],titRGB[2]);
+
 
 //        local topBarLine = fe.add_image("white.png", 0, 25, flw, 1);
 //        topBarLine.set_rgb(160, 160, 160);
@@ -678,12 +678,12 @@ class Grid extends Conveyor
         ui_displayname = fe.add_image ("systems/[DisplayName]",-305, 67, 90, 67 );
         ui_displayname.preserve_aspect_ratio = true;
 
-        ui_filter_b = fe.add_text("[FilterName] Games", -305, 66, 400, 25);
+        ui_filter_b = fe.add_text("", -305, 66, 400, 25);
         ui_filter_b.align = Align.Left;
         ui_filter_b.font="arctik 5";
         ui_filter_b.set_rgb( 0, 0, 0 );
 
-        ui_filter_a = fe.add_text("[FilterName] Games", -305, 65, 400, 25);
+        ui_filter_a = fe.add_text("", -305, 65, 400, 25);
         ui_filter_a.align = Align.Left;
         ui_filter_a.font="arctik 5";        
         
@@ -713,7 +713,6 @@ class Grid extends Conveyor
 		local move_list2   = {when = Transition.StartLayout, property = "x", start = -420, end = 79, time = 800};	
 		
 		animation.add( PropertyAnimation( ui_banner, move_banner ) );
-		animation.add( PropertyAnimation( listB, move_list2 ) );
 		animation.add( PropertyAnimation( list, move_list ) );
 		if (user_interval != 0) {
 			animation.add( PropertyAnimation( ui_time,    {when = Transition.StartLayout, property = "x", start = 1380, end = 1180, time = 700}));	
@@ -751,7 +750,6 @@ class Grid extends Conveyor
 		snap_t.index_offset = newoffset;
 		fav_t.index_offset = newoffset;
 		name_t.index_offset = newoffset;
-		listB.index_offset = newoffset;
 		list.index_offset = newoffset;
 		set_favorite();
 					
@@ -815,24 +813,45 @@ class Grid extends Conveyor
 		switch ( sig )	
 		{
 		case "up":
+			fe.layout.page_size = pageSize;
+
 			if ( vert_flow && ( sel_y > 0 ) )
 			{
 				sel_y--;				
 				update_frame();
-				move_sound();				
+				move_sound();		
+			}
+			else
+			{
+				transition_swap_point=0.0;
+				do_correction();				
+				fe.signal( "prev_page" );
+				move_sound2();							
 			}	
 			return true;
 
 		case "down":
+			fe.layout.page_size = pageSize;
+
 			if ( vert_flow && ( sel_y < rows - 1 ))
 			{
 				sel_y++;				
-				update_frame();
-				move_sound();			
+				update_frame();	
+				move_sound();						
+			}
+			else
+			{
+				transition_swap_point=0.0;
+				do_correction();
+				fe.signal( "next_page" );
+				move_sound2();
+								
 			}
 			return true;
 
 		case "left":
+			fe.layout.page_size = vert_flow ? rows : cols;	
+
 			if ( vert_flow && ( sel_x > 0 ))
 			{
 				sel_x--;
@@ -854,6 +873,8 @@ class Grid extends Conveyor
 			return true;
 
 		case "right":
+			fe.layout.page_size = vert_flow ? rows : cols;
+			
 			if ( vert_flow && ( sel_x < cols - 1 ) )
 			{
 				sel_x++;
@@ -1023,3 +1044,98 @@ local my_array = [];
 	for (local i = 0; i < rows * cols; i++)
 		my_array.push(MySlot(i, gridc));
 		gridc.create_layout(my_array);
+		
+	
+////////////////
+//Sound effects
+////////////
+function fade_transitions( ttype, var, ttime ) {
+ switch ( ttype ) {
+  case Transition.ToNewSelection:
+//  case Transition.ToNewList:
+	local Wheelclick = fe.add_sound("Click.mp3")
+	      Wheelclick.playing=true
+  break;
+  case Transition.ToGame:
+  case Transition.ToNewList:
+	local Wheelclick = fe.add_sound("selection.mp3")
+	      Wheelclick.playing=true
+  break;
+  }
+ return false;
+}
+
+fe.add_transition_callback( "fade_transitions" );
+
+//View name
+
+local layout_width = fe.layout.width
+local layout_height = fe.layout.height
+local flx = ( fe.layout.width - layout_width ) / 2
+local fly = ( fe.layout.height - layout_height ) / 2
+local flw = layout_width
+local flh = layout_height
+
+local mfliter2W = (flw - crw - bbm - floor( bbh * 2.875 ))
+local mfliter2H = floor( bbh * 0.15 )
+
+ ::OBJECTS <- {
+mbg = fe.add_image( "backgrounds/Logos/Light Blue.png", 0, 0, fe.layout.width, fe.layout.height ),
+msystem = fe.add_image( "../../menu-art/flyer/[DisplayName]", flw*0.3, flh*0.5, flw*0.4, flh*0.4 ),
+mwhiteline = fe.add_image( "white.png", 0, flh*0.3, fe.layout.width, flh*0.15 ),
+mfliter = fe.add_text( "[DisplayName]", 0, flh*0.3, fe.layout.width, flh*0.1 ),
+mfliter2 = fe.add_text( "Grid View", 0, flh*0.375, fe.layout.width, mfliter2H ),
+}
+OBJECTS.mbg.alpha = 200;
+OBJECTS.mbg.preserve_aspect_ratio = true;
+OBJECTS.msystem.preserve_aspect_ratio = true;
+OBJECTS.mwhiteline.set_rgb( bgRGB[0], bgRGB[1], bgRGB[2] )
+OBJECTS.mfliter.align = Align.Centre;
+OBJECTS.mfliter.set_rgb(titRGB[0],titRGB[1],titRGB[2])
+OBJECTS.mfliter.alpha = 0;
+OBJECTS.mfliter.style = Style.Regular
+OBJECTS.mfliter.font = "BebasNeueBold.otf"
+OBJECTS.mfliter2.charsize = (floor(OBJECTS.mfliter2.height * 1000/700))*0.4
+OBJECTS.mfliter2.style = Style.Regular
+OBJECTS.mfliter2.font = flh <= 600 ? "BebasNeueRegular.otf": "BebasNeueBook.otf"
+
+ local movein_mbg = {
+   when =  Transition.StartLayout ,property = "alpha", start = 255, end = 255, time = 1000
+}
+
+ local moveout_mbg = {
+    when = Transition.StartLayout ,property = "alpha", start = 255, end = 0, time = 700, delay = 1000
+}
+
+ local movein_msysfliter = {
+   when =  Transition.StartLayout, property = "alpha", start = 50, end = 255, time = 1000
+}
+
+ local moveout_msysfliter = {
+    when = Transition.StartLayout ,property = "alpha", start = 255, end = 0, time = 700, delay = 1000
+}
+
+
+ local movein_mwhiteline = {
+   when =  Transition.StartLayout, property = "alpha", start = 50, end = 150, time = 1000
+}
+
+ local moveout_mwhiteline = {
+    when = Transition.StartLayout ,property = "alpha", start = 150, end = 0, time = 700, delay = 1000
+}
+animation.add( PropertyAnimation( OBJECTS.mbg, movein_mbg ) );
+animation.add( PropertyAnimation( OBJECTS.mbg, moveout_mbg ) );
+animation.add( PropertyAnimation( OBJECTS.msystem, movein_msysfliter ) );
+animation.add( PropertyAnimation( OBJECTS.msystem, moveout_msysfliter ) );
+animation.add( PropertyAnimation( OBJECTS.mwhiteline,  movein_mwhiteline ) );
+animation.add( PropertyAnimation( OBJECTS.mwhiteline,  moveout_mwhiteline) );
+animation.add( PropertyAnimation( OBJECTS.mfliter, movein_msysfliter ) );
+animation.add( PropertyAnimation( OBJECTS.mfliter, moveout_msysfliter ) );
+animation.add( PropertyAnimation( OBJECTS.mfliter2, movein_msysfliter ) );
+animation.add( PropertyAnimation( OBJECTS.mfliter2, moveout_msysfliter ) );
+
+
+//
+// Fade_in Module
+//
+fe.load_module("fade_in.nut");
