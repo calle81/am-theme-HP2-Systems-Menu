@@ -1972,14 +1972,14 @@ characterimage.alpha=255;
 characterimage.preserve_aspect_ratio = true;	
 }
 **/
+
+if (( my_config["enable_list_horizontal"] == "Vertical Wheel"  ) || ( my_config["enable_list_horizontal"] == "List Box")){
+
 // Genre
 local genreImageH = bbh - bbm * 2
 local genreImageW = floor( genreImageH * 1.125 )
 local genreImage = fe.add_image("images/unknown.png", flx + flw - crw - genreImageW - bbm, flh - bbh + bbm, genreImageW, genreImageH )
 GenreImage(genreImage)
-if (( my_config["enable_list_horizontal"] == "Vertical Wheel"  ) || ( my_config["enable_list_horizontal"] == "List Box")){
-
-
 
 
 // Players
