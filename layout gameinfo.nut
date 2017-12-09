@@ -40,7 +40,6 @@ class UserConfig {
 	</ label="GAME/SYSTEM INFO", help="Show or hide system name", order=26 /> uct7=" ";
 	</ label="Fade System/Game Title", help="Show System and Category Name", options="Yes, No", order=27 /> fadeWheelTitle="No";
 	</ label="Select Game Description Text Mode", help="Select Game Description Text Mode", options="On, Off", order=28 /> select_description2="On";
-	</ label="History.dat", help="History.dat location. Be sure to enable and config History.dat from the plugins menu.", order=28 /> dat_path="/opt/retropie/configs/all/attractmode/history.dat";
 	</ label=" ", help="Brought to you by Project HyperPie", order=29 /> uct8=" ";	
 
 	</ label="COLOUR OPTIONS", help="Brought to you by Project HyperPie", order=30 /> uct9=" ";	
@@ -779,7 +778,7 @@ local fly = fe.layout.height;
 /////////////////
 //Game Description
 ////////////////
-
+if ( my_config["select_description2"] == "On" ) {
 // Class to assign the history.dat information
 // to a text object called ".currom"
 
@@ -820,26 +819,52 @@ local fly = fe.layout.height;
 		return text;
 	}
 	
-if ( my_config["select_description2"] == "On" ) {
+
 
 local image_bg = fe.add_image( "scanline.png", flx*0.2, fly*0.15, flw*0.5, flh*0.7 ); 
 local image_bg2 = fe.add_image( "white.png", flx*0.2, fly*0.15, flw*0.5, flh*0.7 ); 
 image_bg2.set_rgb(bgRGB[0],bgRGB[1],bgRGB[2])
 image_bg.alpha = 255;
 image_bg2.alpha = 150;
-local text = fe.add_text("[!get_hisinfo]", flx*0.2, fly*0.15, flw*0.5, flh*0.7);
+local text = fe.add_text("[!get_hisinfo]", flx*0.2, fly*0.15, flw*0.5, flh*1.1);
 local text2 = fe.add_text("[Overview]", flx*0.2, fly*0.15, flw*0.5, flh*0.7);
-text.charsize = flx*0.012;
+text.charsize = flx*0.015;
 text.align = Align.Left;
 text.word_wrap = true;
 text.alpha = 255;
-text2.charsize = flx*0.012;
+text2.charsize = flx*0.015;
 text2.align = Align.Left;
 text2.word_wrap = true;
 text2.alpha = 255;
+
+
+local textoverviewy = {
+    when = When.StartLayout,
+    property = "y",
+    start = fly*0.5
+    end = fly*-0.5
+    time = 40000
+    tween = Tween.Linear
+    delay = 0
+    loop = true
+ }   
+ local textoverviewn = {
+    when = Transition.ToNewSelection,
+    property = "y",
+    start = fly*0.5
+    end = fly*-0.5
+    time = 40000
+    tween = Tween.Linear
+    delay = 0
+    loop = true
+ }   
+animation.add( PropertyAnimation ( text, textoverviewy ) ); 
+animation.add( PropertyAnimation ( text2, textoverviewy ) );
+animation.add( PropertyAnimation ( text, textoverviewn ) ); 
+animation.add( PropertyAnimation ( text2, textoverviewn ) );
 }
 
- 
+
 
 
 /////////////////////////////////////////////////////
