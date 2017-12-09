@@ -40,6 +40,7 @@ class UserConfig {
 	</ label="GAME/SYSTEM INFO", help="Show or hide system name", order=26 /> uct7=" ";
 	</ label="Fade System/Game Title", help="Show System and Category Name", options="Yes, No", order=27 /> fadeWheelTitle="No";
 	</ label="Select Game Description Text Mode", help="Select Game Description Text Mode", options="On, Off", order=28 /> select_description2="On";
+	</ label="History.dat", help="History.dat location. Be sure to enable and config History.dat from the plugins menu.", order=28 /> dat_path="/opt/retropie/configs/all/attractmode/history.dat"; //dat_path="H:\\HyperPC\\Attract\\history.dat"; 
 	</ label=" ", help="Brought to you by Project HyperPie", order=29 /> uct8=" ";	
 
 	</ label="COLOUR OPTIONS", help="Brought to you by Project HyperPie", order=30 /> uct9=" ";	
@@ -778,10 +779,10 @@ local fly = fe.layout.height;
 /////////////////
 //Game Description
 ////////////////
-if ( my_config["select_description2"] == "On" ) {
+
 // Class to assign the history.dat information
 // to a text object called ".currom"
-
+if ( my_config["select_description2"] == "On" ) {
 	function get_hisinfo(offset) 
 	{ 
 		local sys = split( fe.game_info( Info.System,offset ), ";" );
