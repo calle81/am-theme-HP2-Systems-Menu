@@ -13,8 +13,8 @@ class UserConfig {
 	</ label=" ", help="Brought to you by Project HyperPie", order=2 /> uct100=" ";
 	
 	</ label="GENERAL SETTINGS", help="Brought to you by Project HyperPie", order=3 /> uct3=" ";	
-	</ label="Background Image", help="Select theme background", options="Game Flyer, System Flyer, City Lights, Pixel Skyline, Grid Logos Dark Blue, Grid Logos Dark Grey, Grid Logos Green, Grid Logos Light Blue, Grid Logos Light Grey, Grid Logos Mid Blue, Grid Logos Mid Blue, Grid Logos Orange, Grid Logos Pink, Grid Logos Purple, Grid Logos Red, Grid Logos Turquoise, Grid Logos Yellow, Logos Dark Blue, Logos Dark Grey, Logos Green, Logos Light Blue, Logos Light Grey, Logos Light Turquoise, Logos Mid Blue, Logos Orange, Logos Pink, Logos Purple, Logos Red, Logos Turquoise, Logos Yellow, Mono Logos Blue, Mono Logos Black, Neon, None", order=4 /> enable_bg="Logos Light Blue";	
-	</ label="Background Image Scanline Overlay", help="Enable Background Image Scanline Overlay", options="Light, Medium, Dark, Diagonal, No", order=5 /> enable_backgroundoverlay="Light"; 
+	</ label="Background Image", help="Select theme background", options="Custom JPG, Custom PNG,Game Flyer, System Flyer, City Lights, Pixel Skyline, Neon Logos White, Neon Logos Cyan, Neon Logos Blue,  Neon Logos Light Blue, Neon Logos Pink, Grid Logos Dark Blue, Grid Logos Dark Grey, Grid Logos Green, Grid Logos Light Blue, Grid Logos Light Grey, Grid Logos Mid Blue, Grid Logos Mid Blue, Grid Logos Orange, Grid Logos Pink, Grid Logos Purple, Grid Logos Red, Grid Logos Turquoise, Grid Logos Yellow, Logos Dark Blue, Logos Dark Grey, Logos Green, Logos Light Blue, Logos Light Grey, Logos Light Turquoise, Logos Mid Blue, Logos Orange, Logos Pink, Logos Purple, Logos Red, Logos Turquoise, Logos Yellow, Mono Logos Blue, Mono Logos Black, None", order=4 /> enable_bg="System Flyer";
+	</ label="Background Image Scanline Overlay", help="Enable Background Image Scanline Overlay", options="Light, Medium, Dark, Diagonal, No", order=5 /> enable_backgroundoverlay="No"; 
     </ label="Disable Video Sound", help="Disable Video Sound", options="Yes,No", order=6 /> enable_backgroundmusic="No";
 	</ label="Left Side Art", help="Enable Left Side Art", options="Yes,No", order=7 /> enable_leftart="Yes";
    	</ label="Left Wheel Image", help="Fade Out Left Wheel Image", options="Yes, Fade Out,No", order=8 /> LeftWheel="Yes" ;
@@ -22,10 +22,11 @@ class UserConfig {
 	</ label="Search Key", help="Choose the key to initiate a search", options="custom1,custom2,custom3,custom4,custom5,custom6,up,down,left,right", order=10 /> user_search_key="custom1";
     </ label="Search Results", help="Choose the search method", options="show_results,next_match", order=11 /> user_search_method="show_results";
 	</ label="Title", help="Enable Title", options="Yes, No", order=12 /> enable_title="Yes";
-	</ label="Frame Around Video", help="Select frame option", options="Yes, No", order=13 /> enable_frame="No";
+	</ label="Frame Around Video", help="Select frame option", options="Yes, No", order=13 /> enable_frame="Yes";
 	</ label="Enable Flyer Art", help="Enable Flyer Art", options="Yes,No", order=14 /> enable_bigart3="Yes";
    	</ label="Clock", help="Enable Clock", options="Yes,No", order=15 /> enable_clock="Yes";
 	</ label="Enable System Image", help="Enable System Image Art", options="Yes,No", order=16 /> enable_systemimage="Yes";
+	</ label="Art Load Delay", help="Delay Loading of snaps and flyer to optimize performance", options="On,Off", order=8 /> art_delay="On" ;
 	</ label=" ", help="Brought to you by Project HyperPie", order=17 /> uct4=" ";
 
 
@@ -34,18 +35,20 @@ class UserConfig {
 	</ label="Wheel Art Folder", help="The artwork to spin", options="wheel, marquee, flyer, fanart, cartart, boxart", order=20 /> orbit_art="wheel";
 	</ label="Wheel Transition Time", help="Time in milliseconds for wheel spin.", order=21 /> transition_ms="35";  
 	</ label="Wheel Fade Time", help="Time in milliseconds to fade the wheel.", options="Off,2500,5000,7500,10000,12500,15000,17500,20000,22500,25000,27500,30000", order=22 /> wheel_fade_ms="2500";
-   	</ label="Game List Rows", help="How many games to display on the List Box", options="11,13,15,17,19,21,23,25,27,29,31", order=23 /> rows="19"
-	</ label="Game List Auto Hide", help="Time in seconds after which game list hides\n0 disables auto hide and flyer. Default value is 1", option="0", order=24 /> glautohide="3"	
+   	</ label="Game List Rows", help="How many games to display on the List Box", options="11,13,15,17,19,21,23,25,27,29,31", order=23 /> rows="19";
+	</ label="Game List Auto Hide", help="Time in seconds after which game list hides\n0 disables auto hide and flyer. Default value is 1", option="0", order=24 /> glautohide="3";	
+	</ label="List Box Opacity", help="Set List Box Opacity. 255 is equal to no opacity", options="100,200,255", order=24 /> ListBoxOpacity="255";	
 	</ label=" ", help="Brought to you by Project HyperPie", order=25 /> uct6=" ";	
 	
 	</ label="GAME/SYSTEM INFO", help="Show or hide system name", order=26 /> uct7=" ";
 	</ label="Fade System/Game Title", help="Show System and Category Name", options="Yes, No", order=27 /> fadeWheelTitle="No";
 	</ label="Select Game Description Text Mode", help="Select Game Description Text Mode", options="Right,Popup,Off", order=28 /> select_description="Off";
+	</ label="History.dat", help="History.dat location. Be sure to enable and config History.dat from the plugins menu.", order=28 /> dat_path="H:\\HyperPC\\Attract\\history.dat"; ///opt/retropie/configs/all/attractmode/history.dat";
 	</ label=" ", help="Brought to you by Project HyperPie", order=29 /> uct8=" ";	
 
 	</ label="COLOUR OPTIONS", help="Brought to you by Project HyperPie", order=30 /> uct9=" ";	
 	</ label="Border Overlay Color as R,G,B", help="( 0-255 values allowed )\nSets the colour of background elements.\nLeave blank if you want the colour from the randomized to be stored permanently.", option="0", order=31 /> bgrgb="0,0,0"
-	</ label="List Box Background Color as R,G,B", help="( 0-255 values allowed )\nSets the colour of background elements.\nLeave blank if you want the colour from the randomized to be stored permanently.", option="0", order=32 /> lbgrgb="0,163,223"
+	</ label="List Box Background Color as R,G,B", help="( 0-255 values allowed )\nSets the colour of background elements.\nLeave blank if you want the colour from the randomized to be stored permanently.", option="0", order=32 /> lbgrgb="0,0,30"
 	</ label="Video Frame Color as R,G,B", help="( 0-255 values allowed )\nSets the colour of the frame.\nLeave blank if you want the colour from the randomized to be stored permanently.", option="0", order=334 /> frrgb="250,250,250"
 	</ label="Category text color as R,G,B", help="( 0-255 values allowed )\nSets the colour of accent elements.\nLeave blank if you want the colour from the randomized to be stored permanently.", option="0", order=35 /> selrgb="255,255,0"
 	</ label="Title color as R,G,B", help="( 0-255 values allowed )\nSets the colour of accent elements.\nLeave blank if you want the colour from the randomized to be stored permanently.", option="0", order=36 /> titrgb="255,255,0" 
@@ -106,10 +109,11 @@ am_version_check.visible = false
 // modules
 fe.load_module("fade");
 fe.load_module( "animate");
-fe.load_module( "pan-and-scan" );
+fe.load_module( "pan-and-scan-hp" );
 fe.do_nut("nuts/ryb2rgb.nut")
 fe.do_nut("nuts/animate.nut")
 fe.do_nut("nuts/genre.nut")
+fe.load_module("objects/controls");
 fe.load_module("objects/keyboard-search")
 
 fe.layout.font="BebasNeueRegular.otf";
@@ -134,6 +138,7 @@ local flyerH = flh - bth - bbh
 local flyerW = lbw
 local update_artwork = false
 local update_counter = 0
+local ListBoxAlpha = my_config["ListBoxOpacity"].tointeger();
 
 local cr_en = false
 local crw = 0
@@ -218,6 +223,16 @@ try {	wheel_fade_ms = my_config["wheel_fade_ms"].tointeger(); } catch ( e ) { }
 // Background Art 
 /////////////////////
 
+if ( my_config["enable_bg"] == "Custom JPG") 
+{
+local bgflyerslide = fe.add_image("backgrounds/custom.jpg", 0, 0, flw, flh );
+}
+
+if ( my_config["enable_bg"] == "Custom PNG") 
+{
+local bgflyerslide = fe.add_image("backgrounds/custom.png", 0, 0, flw, flh );
+}
+
 if ( my_config["enable_bg"] == "System Flyer" || my_config["enable_bg"] == "Game Flyer")
 {
 local bgart = PanAndScanImage( "../../menu-art/flyer/[DisplayName]", 0, 0, flw, flh);
@@ -228,7 +243,7 @@ bgart.set_anchor(::Anchor.Center);
 bgart.set_zoom(4.5, 0.00008);
 bgart.set_animate(::AnimateType.Bounce, 0.50, 0.50)
 bgart.set_randomize_on_transition(false);
-bgart.set_start_scale(1.1);
+bgart.set_start_scale(1.0);
 
 if ( my_config["enable_bg"] == "Game Flyer Pan & Scan")
 {
@@ -603,10 +618,69 @@ animation.add( PropertyAnimation( bgflyerslide2, {when = Transition.StartLayout,
 
 }
 
-if ( my_config["enable_bg"] == "Neon") 
+if ( my_config["enable_bg"] == "Neon Logos White") 
 {
-local b_art = fe.add_image("backgrounds/Neon.jpg", 0, 0, flw, flh );
-b_art.alpha=255;
+local bgflyerslide = fe.add_image("backgrounds/Neon Logos/neon white.png", 0, 0, flw, flh );
+bgflyerslide.preserve_aspect_ratio = true;
+local bgflyerslide2 = fe.add_clone(bgflyerslide);
+bgflyerslide2.preserve_aspect_ratio = true;
+//Animation for image bg
+animation.add( PropertyAnimation( bgflyerslide, {when = Transition.StartLayout, property = "x", start = 0, end = -flw, time = 50000, loop=true}));
+animation.add( PropertyAnimation( bgflyerslide2, {when = Transition.StartLayout, property = "x", start = flw, end = 0, time = 50000, loop=true}));			
+animation.add( PropertyAnimation( bgflyerslide2, {when = Transition.StartLayout, property = "alpha", start = 0, end = 255, time = 500}));
+
+}
+
+if ( my_config["enable_bg"] == "Neon Logos Blue") 
+{
+local bgflyerslide = fe.add_image("backgrounds/Neon Logos/neon blue.png", 0, 0, flw, flh );
+bgflyerslide.preserve_aspect_ratio = true;
+local bgflyerslide2 = fe.add_clone(bgflyerslide);
+bgflyerslide2.preserve_aspect_ratio = true;
+//Animation for image bg
+animation.add( PropertyAnimation( bgflyerslide, {when = Transition.StartLayout, property = "x", start = 0, end = -flw, time = 50000, loop=true}));
+animation.add( PropertyAnimation( bgflyerslide2, {when = Transition.StartLayout, property = "x", start = flw, end = 0, time = 50000, loop=true}));			
+animation.add( PropertyAnimation( bgflyerslide2, {when = Transition.StartLayout, property = "alpha", start = 0, end = 255, time = 500}));
+
+}
+
+if ( my_config["enable_bg"] == "Neon Logos Light Blue") 
+{
+local bgflyerslide = fe.add_image("backgrounds/Neon Logos/neon light blue.png", 0, 0, flw, flh );
+bgflyerslide.preserve_aspect_ratio = true;
+local bgflyerslide2 = fe.add_clone(bgflyerslide);
+bgflyerslide2.preserve_aspect_ratio = true;
+//Animation for image bg
+animation.add( PropertyAnimation( bgflyerslide, {when = Transition.StartLayout, property = "x", start = 0, end = -flw, time = 50000, loop=true}));
+animation.add( PropertyAnimation( bgflyerslide2, {when = Transition.StartLayout, property = "x", start = flw, end = 0, time = 50000, loop=true}));			
+animation.add( PropertyAnimation( bgflyerslide2, {when = Transition.StartLayout, property = "alpha", start = 0, end = 255, time = 500}));
+
+}
+
+if ( my_config["enable_bg"] == "Neon Logos Pink") 
+{
+local bgflyerslide = fe.add_image("backgrounds/Neon Logos/neon pink.png", 0, 0, flw, flh );
+bgflyerslide.preserve_aspect_ratio = true;
+local bgflyerslide2 = fe.add_clone(bgflyerslide);
+bgflyerslide2.preserve_aspect_ratio = true;
+//Animation for image bg
+animation.add( PropertyAnimation( bgflyerslide, {when = Transition.StartLayout, property = "x", start = 0, end = -flw, time = 50000, loop=true}));
+animation.add( PropertyAnimation( bgflyerslide2, {when = Transition.StartLayout, property = "x", start = flw, end = 0, time = 50000, loop=true}));			
+animation.add( PropertyAnimation( bgflyerslide2, {when = Transition.StartLayout, property = "alpha", start = 0, end = 255, time = 500}));
+
+}
+
+if ( my_config["enable_bg"] == "Neon Logos Cyan") 
+{
+local bgflyerslide = fe.add_image("backgrounds/Neon Logos/neon cyan.png", 0, 0, flw, flh );
+bgflyerslide.preserve_aspect_ratio = true;
+local bgflyerslide2 = fe.add_clone(bgflyerslide);
+bgflyerslide2.preserve_aspect_ratio = true;
+//Animation for image bg
+animation.add( PropertyAnimation( bgflyerslide, {when = Transition.StartLayout, property = "x", start = 0, end = -flw, time = 50000, loop=true}));
+animation.add( PropertyAnimation( bgflyerslide2, {when = Transition.StartLayout, property = "x", start = flw, end = 0, time = 50000, loop=true}));			
+animation.add( PropertyAnimation( bgflyerslide2, {when = Transition.StartLayout, property = "alpha", start = 0, end = 255, time = 500}));
+
 }
 /**
 if ( my_config["enable_bg"] == "Per System") 
@@ -646,54 +720,63 @@ local bgflyerslide = fe.add_image("scanline2.png", 0, 0, flw, flh );
 }
 
 
-
 /////////////////////
 //Video
 /////////////////////
+//Frame
+if ( my_config["enable_frame"] == "Yes") {
+local framebg = fe.add_image("black.png", flx*0.2, fly*0.167, flw*0.5, flh*0.675)
+framebg.preserve_aspect_ratio = true;
+}
 
 if ( my_config["videomode"] == "Center") {
+		if ( my_config["art_delay"] == "On") {
 local last_nav = 0;
 local gtime = 0;
-local art_flag = false;
+local art_flag = true;
 
 local video = fe.add_image( fe.get_art("snap"),flx*0.2, fly*0.18, flw*0.5, flh*0.65);  //Use add_image so the snap doesn't auto-update while navigating
-
 if ( my_config["enable_backgroundmusic"] == "Yes") {
 local bgMusic = fe.add_sound("bgMusic.mp3")
 video.video_flags = Vid.NoAudio;
 }
-
-video.preserve_aspect_ratio = true;
 fe.add_transition_callback( "my_transition" );
-video.preserve_aspect_ratio = true;
 function my_transition( ttype, var, ttime )
 {
-	if ( ttype == Transition.ToNewSelection )
-	{
-		last_nav = gtime;
-		art_flag = true;
-	}
+    if ( ttype == Transition.FromOldSelection || Transition.ToNewList )
+    {
+        last_nav = gtime;
+        art_flag = true;
+        video.video_playing = false
+    }
 }
 
 fe.add_ticks_callback( this, "on_tick" );
 function on_tick( ttime )
 {
     gtime = ttime;
-	if (art_flag && (ttime - last_nav > 1000))  //800ms delay
-	{
-		video.file_name = fe.get_art("snap");
-		art_flag = false;
-	}
+    if (art_flag && (ttime - last_nav > 500))  //400ms delay
+    {
+        video.file_name = fe.get_art("snap");
+        art_flag = false;
+        video.video_playing = true
+    }
+    if ( video.video_playing == false && video.preserve_aspect_ratio == false)
+        video.preserve_aspect_ratio = true
+}
 }
 }
 
-/*****
+
 if ( my_config["videomode"] == "Center") {
-local snap = FadeArt( "snap", flx*0.12, fly*0.18, flw*0.65, flh*0.65)
+	if ( my_config["art_delay"] == "Off") {
+local snap = FadeArt( "snap", flx*0.2, fly*0.18, flw*0.5, flh*0.65);
 snap.trigger = Transition.EndNavigation;
 snap.preserve_aspect_ratio = true;
+	}
 }
-*****/
+
+
 if ( my_config["videomode"] == "Full Screen") {
 local snap = FadeArt( "snap", 0, 0, flw, flh );
 snap.trigger = Transition.EndNavigation;
@@ -704,7 +787,7 @@ snap.preserve_aspect_ratio = true;
 }
 //Frame
 if ( my_config["enable_frame"] == "Yes") {
-local frame = fe.add_image("frame.png", flx*0.2, fly*0.18, flw*0.49, flh*0.65)
+local frame = fe.add_image("frame.png", flx*0.2, fly*0.167, flw*0.5, flh*0.675)
 frame.set_rgb( frRGB[0], frRGB[1], frRGB[2] )
 frame.preserve_aspect_ratio = true;
 }
@@ -740,6 +823,7 @@ scanline.alpha = 255;
 //////////////////
 
 if ( my_config["enable_bigart3"] == "Yes" )
+			if ( my_config["art_delay"] == "On") {
 {
 local last_flyernav = 0;
 local gflyertime = 0;
@@ -747,15 +831,15 @@ local flyer_flag = false;
 local flx = ( fe.layout.width - layout_width ) / 2
 local fly = ( fe.layout.height - layout_height ) / 2
 local flyer = fe.add_image( fe.get_art("flyer"),flw + flx - crw - flyerW, bth, flyerW, flyerH );  //Use add_image so the snap doesn't auto-update while navigating
-flyer.preserve_aspect_ratio = true;
+
 fe.add_transition_callback( "my_flyertransition" );
-flyer.preserve_aspect_ratio = true;
 function my_flyertransition( ttype, var, ttime )
 {
-	if ( ttype == Transition.ToNewSelection )
+    if ( ttype == Transition.FromOldSelection || Transition.ToNewList )
 	{
 		last_flyernav = gflyertime;
 		flyer_flag = true;
+		flyer.video_playing = false
 	}
 }
 
@@ -767,10 +851,20 @@ function on_flyertick( ttime )
 	{
 		flyer.file_name = fe.get_art("flyer");		
 		flyer_flag = false;
+		flyer.video_playing = false
 
 	}
-
+if ( flyer.video_playing == false && flyer.preserve_aspect_ratio == false)
+        flyer.preserve_aspect_ratio = true
 }
+}
+}
+
+if ( my_config["enable_bigart3"] == "Yes" )
+			if ( my_config["art_delay"] == "Off") {
+local flx = ( fe.layout.width - layout_width ) / 2
+local fly = ( fe.layout.height - layout_height ) / 2
+local flyer = FadeArt("flyer",flw + flx - crw - flyerW, bth, flyerW, flyerH );
 }
 local flx = fe.layout.width;
 local fly = fe.layout.height;
@@ -969,12 +1063,12 @@ animation.add( PropertyAnimation ( bigart, bigartfade ) );
 //////////////////////////////////////
 if ( my_config["enable_leftart"] == "Yes" ){
 if ( my_config["enable_bigart"] == "Yes" ){
-local cdart = fe.add_artwork("cdart", flx*0.1, fly*0.3, flw*0.15, flh*0.25);
+local cdart = fe.add_artwork("cdart", flx*0.09, fly*0.3, flw*0.15, flh*0.25);
+cdart.trigger = Transition.EndNavigation;
 cdart.preserve_aspect_ratio = true;
 
 local cdart_rotation = {
-when = Transition.ToNewSelection ,property = "rotation", start = 0, end = 360, time = 3000, loop = true
-}
+when = Transition.ToNewSelection ,property = "rotation", start = 0, end = 360, time = 3000, loop = true,}
 local cdart_rotationLoad = {
 when = When.StartLayout ,property = "rotation", start = 0, end = 360, time = 3000, loop = true
 }
@@ -2074,6 +2168,7 @@ local wheelImageH = floor( wheelScale * 0.3 )*0.9
 local wheelImage = fe.add_artwork( "wheel" ,flx + bbm, bth - floor( wheelImageH / 2 ), wheelImageW, wheelImageH )
 wheelImage.preserve_aspect_ratio = true
 
+
 //Search
 local search_surface = fe.add_surface(fe.layout.width*0.49, fe.layout.height*0.65)
 	search_surface.x = fe.layout.width*0.2
@@ -2165,11 +2260,11 @@ function on_transition( ttype, var, ttime ) {
 	if ( my_config["enable_list_type"] == "List Box" ){
 			gameListBoxAnimX.to = flw + flx - crw - lbw
 			if ( glist_delay != 0 ) gameListBoxAnimX.hide( flw + flx - crw, fe.layout.time )
-			gameListBoxAnimA.to = 200
+			gameListBoxAnimA.to = ListBoxAlpha
 			if ( glist_delay != 0 ) gameListBoxAnimA.hide( 0, fe.layout.time )
 			gameListBoxBackgroundAnimX.to = flw + flx - crw - lbw
 			if ( glist_delay != 0 ) gameListBoxBackgroundAnimX.hide( flw + flx - crw, fe.layout.time )
-			gameListBoxBackgroundAnimA.to = 200
+			gameListBoxBackgroundAnimA.to = ListBoxAlpha
 			if ( glist_delay != 0 ) gameListBoxBackgroundAnimA.hide( 0, fe.layout.time )
 			}
 		}
@@ -2194,19 +2289,19 @@ function on_transition( ttype, var, ttime ) {
 			categoryAnimX.from = categoryX + category.msg_width * 0.5 + categoryLeft.msg_width * 0.5 + categoryGap
 			categoryAnimX.to = categoryX
 			categoryRightAnimA.from = 0
-			categoryRightAnimA.to = 200
+			categoryRightAnimA.to = ListBoxAlpha
 			categoryRight2AnimA.from = 0.01
 			categoryRight2AnimA.to = 0
-			categoryLeft2AnimA.from = 200
+			categoryLeft2AnimA.from = ListBoxAlpha
 			categoryLeft2AnimA.to = 0
 
 		if ( glist_delay != 0 ) gameListBoxAnimX.hide( flw + flx - crw, fe.layout.time )
 		gameListBoxAnimA.from = 0
-		gameListBoxAnimA.to = 200
+		gameListBoxAnimA.to = ListBoxAlpha
 		if ( glist_delay != 0 ) gameListBoxAnimA.hide( 0, fe.layout.time )
 		if ( glist_delay != 0 ) gameListBoxBackgroundAnimX.hide( flw + flx - crw, fe.layout.time )
 		gameListBoxBackgroundAnimA.from = 0
-		gameListBoxBackgroundAnimA.to = 200
+		gameListBoxBackgroundAnimA.to = ListBoxAlpha
 		if ( glist_delay != 0 ) gameListBoxBackgroundAnimA.hide( 0, fe.layout.time )
 		
 		if ( var < 0 ) {
@@ -2219,10 +2314,10 @@ function on_transition( ttype, var, ttime ) {
 			categoryAnimX.from = categoryX + category.msg_width * 0.5 + categoryLeft.msg_width * 0.5 + categoryGap
 			categoryAnimX.to = categoryX
 			categoryRightAnimA.from = 0
-			categoryRightAnimA.to = 200
+			categoryRightAnimA.to = ListBoxAlpha
 			categoryRight2AnimA.from = 0.01
 			categoryRight2AnimA.to = 0
-			categoryLeft2AnimA.from = 200
+			categoryLeft2AnimA.from = ListBoxAlpha
 			categoryLeft2AnimA.to = 0
 		}
 		
@@ -2236,10 +2331,10 @@ function on_transition( ttype, var, ttime ) {
 			categoryAnimX.from = categoryX + category.msg_width * 0.5 + categoryLeft.msg_width * 0.5 + categoryGap
 			categoryAnimX.to = categoryX
 			categoryRightAnimA.from = 0
-			categoryRightAnimA.to = 200
+			categoryRightAnimA.to = ListBoxAlpha
 			categoryRight2AnimA.from = 0.01
 			categoryRight2AnimA.to = 0
-			categoryLeft2AnimA.from = 200
+			categoryLeft2AnimA.from = ListBoxAlpha
 			categoryLeft2AnimA.to = 0
 		}
 
@@ -2311,15 +2406,15 @@ local mfliter2W = (flw - crw - bbm - floor( bbh * 2.875 ))
 local mfliter2H = floor( bbh * 0.15 )
 
  ::OBJECTS <- {
-mbg = fe.add_image( "backgrounds/Logos/Light Blue.png", 0, 0, fe.layout.width, fe.layout.height ),
-msystem = fe.add_image( "../../menu-art/flyer/[DisplayName]", flw*0.3, flh*0.5, flw*0.4, flh*0.4 ),
+//mbg = fe.add_image( "backgrounds/Logos/Light Blue.png", 0, 0, fe.layout.width, fe.layout.height ),
+//msystem = fe.add_image( "../../menu-art/flyer/[DisplayName]", flw*0.3, flh*0.5, flw*0.4, flh*0.4 ),
 mwhiteline = fe.add_image( "white.png", 0, flh*0.3, fe.layout.width, flh*0.15 ),
 mfliter = fe.add_text( "[DisplayName]", 0, flh*0.3, fe.layout.width, flh*0.1 ),
 mfliter2 = fe.add_text( "Default View", 0, flh*0.4, fe.layout.width, mfliter2H ),
 }
-OBJECTS.mbg.alpha = 200;
-OBJECTS.mbg.preserve_aspect_ratio = true;
-OBJECTS.msystem.preserve_aspect_ratio = true;
+//OBJECTS.mbg.alpha = 200;
+//OBJECTS.mbg.preserve_aspect_ratio = true;
+//OBJECTS.msystem.preserve_aspect_ratio = true;
 OBJECTS.mwhiteline.set_rgb( bgRGB[0], bgRGB[1], bgRGB[2] )
 OBJECTS.mfliter.align = Align.Centre;
 OBJECTS.mfliter.set_rgb(titRGB[0],titRGB[1],titRGB[2])
@@ -2335,29 +2430,29 @@ OBJECTS.mfliter2.font = flh <= 600 ? "BebasNeueRegular.otf": "BebasNeueBook.otf"
 }
 
  local moveout_mbg = {
-    when = Transition.StartLayout ,property = "alpha", start = 255, end = 0, time = 700, delay = 1000
+    when = Transition.StartLayout ,property = "alpha", start = 255, end = 0, time = 1000, delay = 2000
 }
 
  local movein_msysfliter = {
-   when =  Transition.StartLayout, property = "alpha", start = 50, end = 255, time = 1000
+   when =  Transition.StartLayout, property = "alpha", start = 50, end = 255, time = 2000
 }
 
  local moveout_msysfliter = {
-    when = Transition.StartLayout ,property = "alpha", start = 255, end = 0, time = 700, delay = 1000
+    when = Transition.StartLayout ,property = "alpha", start = 255, end = 0, time = 1000, delay = 2000
 }
 
 
  local movein_mwhiteline = {
-   when =  Transition.StartLayout, property = "alpha", start = 50, end = 150, time = 1000
+   when =  Transition.StartLayout, property = "alpha", start = 50, end = 250, time = 2000
 }
 
  local moveout_mwhiteline = {
-    when = Transition.StartLayout ,property = "alpha", start = 150, end = 0, time = 700, delay = 1000
+    when = Transition.StartLayout ,property = "alpha", start = 150, end = 0, time = 1000, delay = 2000
 }
-animation.add( PropertyAnimation( OBJECTS.mbg, movein_mbg ) );
-animation.add( PropertyAnimation( OBJECTS.mbg, moveout_mbg ) );
-animation.add( PropertyAnimation( OBJECTS.msystem, movein_msysfliter ) );
-animation.add( PropertyAnimation( OBJECTS.msystem, moveout_msysfliter ) );
+//animation.add( PropertyAnimation( OBJECTS.mbg, movein_mbg ) );
+//animation.add( PropertyAnimation( OBJECTS.mbg, moveout_mbg ) );
+//animation.add( PropertyAnimation( OBJECTS.msystem, movein_msysfliter ) );
+//animation.add( PropertyAnimation( OBJECTS.msystem, moveout_msysfliter ) );
 animation.add( PropertyAnimation( OBJECTS.mwhiteline,  movein_mwhiteline ) );
 animation.add( PropertyAnimation( OBJECTS.mwhiteline,  moveout_mwhiteline) );
 animation.add( PropertyAnimation( OBJECTS.mfliter, movein_msysfliter ) );
