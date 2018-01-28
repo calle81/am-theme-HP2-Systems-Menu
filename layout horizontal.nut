@@ -26,6 +26,7 @@ class UserConfig {
    	</ label="Clock", help="Enable Clock", options="Yes,No", order=15 /> enable_clock="";
 	</ label="Enable System Image", help="Enable System Image Art", options="Yes,No", order=16 /> enable_systemimage="";
 	</ label="Art Load Delay", help="Delay Loading of snaps and flyer to optimize performance", options="On,Off", order=8 /> art_delay="" ;
+	</ label="View Name Popup", help="Disable or enable view name popup", options="On,Off", order=8 /> ViewNamePopup="";
 	</ label=" ", help="Brought to you by Project HyperPie", order=17 /> uct4=" ";
 
 
@@ -40,7 +41,7 @@ class UserConfig {
 	
 	</ label="GAME/SYSTEM INFO", help="Show or hide system name", order=26 /> uct7=" ";
 	</ label="Fade System/Game Title", help="Show System and Category Name", options="Yes, No", order=27 /> fadeWheelTitle="";
-	</ label="Select Game Description Text Mode", help="Select Game Description Text Mode", options="Right,Popup,Off", order=28 /> select_description="";
+	</ label="Enable Game Description", help="Enable Game Description", options="On,Off", order=28 /> select_description="";
 	</ label=" ", help="Brought to you by Project HyperPie", order=29 /> uct8=" ";	
 
 	</ label="COLOUR OPTIONS", help="Brought to you by Project HyperPie", order=30 /> uct9=" ";	
@@ -205,12 +206,6 @@ if( my_config["frrgb"] != "" ) {
 if ( error_message || bgRGB.len() != 3 ||  lbgRGB.len() != 3 ||  selRGB.len() != 3 || titRGB.len() != 3 || gslRGB.len() != 3 || pldRGB.len() != 3 || frRGB.len() != 3)
 	while (!fe.overlay.splash_message( "Background or Accent colour has a wrong format.\nPlease check it in Layout Options")){} 
 
-
-//for fading of the wheel
-first_tick <- 0;
-stop_fading <- true;
-wheel_fade_ms <- 0;
-try {	wheel_fade_ms = my_config["wheel_fade_ms"].tointeger(); } catch ( e ) { }
 
 
 
@@ -883,6 +878,7 @@ if ( my_config["enable_bigart3"] == "Yes" )
 local flx = ( fe.layout.width - layout_width ) / 2
 local fly = ( fe.layout.height - layout_height ) / 2
 local flyer = FadeArt("flyer",flw + flx - crw - flyerW, bth, flyerW, flyerH );
+flyer.preserve_aspect_ratio = true
 }
 local flx = fe.layout.width;
 local fly = fe.layout.height;
@@ -890,213 +886,87 @@ local fly = fe.layout.height;
 /////////////////
 //Game Description
 ////////////////
-if ( my_config["select_description"] == "Right" ) {
-local gtext = fe.add_text("[Overview]", flx*0.77, fly*0.2, flw*0.20, flh*0.24 );
-gtext.set_rgb( 255, 255, 255 );
-gtext.align = Align.Left;
-gtext.charsize = 25;
-gtext.rotation = 0;
-gtext.word_wrap = true;
+if ( my_config["select_description"] == "On" ){
+local image_bg = fe.add_image( "white.png", flx*0.719, bth, lbw, (flh - bth - bbh) ); 
+
+image_bg.set_rgb(bgRGB[0],bgRGB[1],bgRGB[2])
+image_bg.alpha = 150;
+image_bg.visible=true;
+
+local text = fe.add_text("info", flx*0.72, fly*0.13, flw*0.26, flh*0.7);
+text.font = "AEH.ttf"
+text.charsize = flx*0.01;
+text.align = Align.Left;
+text.word_wrap = true;
+text.alpha = 255;
+text.visible=true;
+
+local box_back = fe.add_artwork( "back", flx*0.719, bth, lbw, (flh - bth - bbh) ); 
+box_back.preserve_aspect_ratio = true
+box_back.trigger = Transition.EndNavigation;
+box_back.visible=false;
+
+local overlayanddescription = true;
+local backboxartvisible = false;
+
+
+fe.add_transition_callback("on_infotransition")
+
+function on_infotransition(ttype, var, ttime) {
+    if ( ttype == Transition.EndNavigation)
+        text.msg = fe.game_info(Info.Overview)
+	if ( ttype == Transition.StartLayout)
+        text.msg = fe.game_info(Info.Overview)
+	if ( ttype == Transition.ToNewList)
+        text.msg = fe.game_info(Info.Overview)
 }
 
-/////////
-if ( my_config["select_description"] == "Popup" ) {
-class PopUpImage
-{
-_my_image_bg=null;
-_my_text=null;
-
-constructor()
-{
-_my_image_bg = fe.add_image( "white.png", flx*0.719, bth, lbw, (flh - bth - bbh) ); 
-_my_image_bg.set_rgb(bgRGB[0],bgRGB[1],bgRGB[2])
-_my_image_bg.visible=false;
-_my_image_bg.alpha = 180;
-
-_my_text = fe.add_text("[Overview]", flx*0.72, bth, lbw, flh - bth - bbh );
-_my_text.visible=false;
-_my_text.charsize = 22;
-//_my_text.set_rgb( 69, 69, 69 );
-_my_text.align = Align.Left;
-_my_text.word_wrap = true;
-_my_text.alpha = 255;
-//_my_text.style = Style.Bold;
-//_my_text.alpha= 100;
-
-fe.add_signal_handler( this, "on_signal" )
-}
-
-
-function on_signal( signal )
-{
-if ( signal == "custom2" )
-{
-_my_image_bg.visible=!_my_image_bg.visible;
-_my_text.visible=_my_image_bg.visible;
-return true;
-}
-return false;
+fe.add_signal_handler(this, "on_signalinfo");
+function on_signalinfo(signal) {
+	if ( signal == "custom2" ){
+		if ( overlayanddescription == true && backboxartvisible == false ) {
+			image_bg.visible=false;
+			text.visible=false;
+			overlayanddescription = false;
+			local Wheelclick = fe.add_sound("selection.mp3")
+	        Wheelclick.playing=true
+			return true;
+		}
+		if ( overlayanddescription == false ) {
+			image_bg.visible=false;
+			text.visible=false;
+			box_back.visible=true;
+			backboxartvisible = true;
+			overlayanddescription = true;
+			local Wheelclick = fe.add_sound("selection.mp3")
+	        Wheelclick.playing=true
+			return true;
+		} 
+		 if ( backboxartvisible == true && overlayanddescription == true ) {
+			box_back.visible=false;
+			image_bg.visible=true;
+			text.visible=true;
+			overlayanddescription = true;
+			backboxartvisible = false;
+			local Wheelclick = fe.add_sound("selection.mp3")
+	        Wheelclick.playing=true
+			return true;
+		}
+		
+		return true;
+	}
+	return false;
 }
 }
-local blah = PopUpImage();
-}
-
-
-if ( my_config["select_description"] == "Off" ) {}
- 
-//////////////////
-///Cart Art Animation
-//////////////////
-
-/////////////////////////////////////////////////////
-if ( my_config["enable_leftart"] == "Yes" ){
-if ( my_config["enable_bigart"] == "Yes" ){
-local bigart = fe.add_artwork(( my_config["select_bigartfolder"] ), flx*0.09, fly*0.3, flw*0.15, flh*0.25);
-bigart.preserve_aspect_ratio = true;
-bigart.trigger = Transition.EndNavigation;
-
-local bigart_rotate_onload = {
-    when = When.StartLayout,
-    when = Transition.ToNewList,
-    property = "rotation",
-    start = 90,
-    end = 0,
-    time = 1500,
-    tween = Tween.Expo
-    loop=false
- }
-
-if ( my_config["enable_bigartrotateonload"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigart_rotate_onload ) );
-}
-
-local bigartscale_onload = {
-    when = When.StartLayout,
-    when = Transition.ToNewList,
-    property = "scale",
-    start = 1.2,
-    end = 1.0,
-    time = 1000	
-    tween = Tween.Quad,
-}
-
-local bigartfade_onload = {
-    when = When.StartLayout,
-    when = Transition.ToNewList,
-	property = "alpha",
-	delay = 500
-	start = 0,
-	end = 255,
-	time = 500,
-	pulse = false
-	loop = false
- }
-
-if ( my_config["enable_bigartscaleonload"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigartscale_onload ) );
-}
-if ( my_config["enable_bigartfadeonload"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigartfade_onload ) );
-}
-
-local bigartscale = {
-    when = Transition.EndNavigation,
-    property = "scale",
-    start = 1.2,
-    end = 1.0,
-    time = 500	
-    tween = Tween.Quad,
-	pulse = false
-//	delay = 500
-	
-}
-
-local bigartx = {
-    when = Transition.ToNewSelection,
-    property = "x",
-    start = flx*-0.1
-    end = flx*0.1
-    time = 1500,
-    tween = Tween.Expo
-	pulse = false
- }  
- 
-local bigartskew_x = {
-    when = Transition.ToNewSelection ,
-	property = "skew_x",
-	start = 255,
-    end = 0,
-	time = 1500,
-	loop = false
-	pulse = false
- } 
- 
-local bigartfade = {
-    when = Transition.ToNewSelection ,
-	property = "alpha",
-//	delay = 500
-	start = 0,
-	end = 255,
-	time = 500,
-	pulse = false
-	loop = false
- }
-local bigartrotate = {
-    when = Transition.ToNewSelection,
-    property = "rotation",
-    start = 90,
-    end = 0,
-    time = 1500,
-    tween = Tween.Expo
-    loop=false
- }
  
 
-//Animation
-
-if ( my_config["enable_bigartrotate"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigartrotate ) );
-}
-if ( my_config["enable_bigartscale"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigartscale ) );
-}
-if ( my_config["enable_bigartflyin"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigartx ) );
-animation.add( PropertyAnimation ( bigart, bigartskew_x ) );
-}
-if ( my_config["enable_bigartfade"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigartfade ) );
-}
-}
-}
-
-//////////////////////////////////////
-
-// CD art animation
-
-//////////////////////////////////////
-if ( my_config["enable_leftart"] == "Yes" ){
-if ( my_config["enable_bigart"] == "Yes" ){
-local cdart = fe.add_artwork("cdart", flx*0.09, fly*0.3, flw*0.15, flh*0.25);
-cdart.trigger = Transition.EndNavigation;
-cdart.preserve_aspect_ratio = true;
-
-local cdart_rotation = {
-when = Transition.ToNewSelection ,property = "rotation", start = 0, end = 360, time = 3000, loop = true,}
-local cdart_rotationLoad = {
-when = When.StartLayout ,property = "rotation", start = 0, end = 360, time = 3000, loop = true
-}
-animation.add( PropertyAnimation ( cdart, cdart_rotation ) );
-animation.add( PropertyAnimation ( cdart, cdart_rotationLoad ) );
-}
-}
-
+ 
 /////////////////////////////////////////////////////
 // Box Art Animation
 ///////////////////////////////////////////////////////////////////////////
 if ( my_config["enable_leftart"] == "Yes" ){
 if ( my_config["enable_bigart2"] == "Yes" ){
-local bigart = fe.add_artwork(( my_config["select_bigartfolder2"] ), flx*0.005, fly*0.24, flw*0.16, flh*0.36);
+local bigart = fe.add_artwork(( my_config["select_bigartfolder2"] ), flx*0.003, fly*0.26, flw*0.16, flh*0.36);
 bigart.preserve_aspect_ratio = true;
 bigart.trigger = Transition.EndNavigation;
 
@@ -1106,7 +976,7 @@ local bigart_rotate_onload = {
     property = "rotation",
     start = 90,
     end = 0,
-    time = 1500,
+    time = 750,
     tween = Tween.Expo
     loop=false
  }
@@ -1157,27 +1027,27 @@ local bigartscale = {
 }
 
 local bigartx = {
-    when = Transition.ToNewSelection,
+    when = Transition.EndNavigation,
     property = "x",
-    start = flx*1
-    end = flx*0.02
-    time = 1500,
+    start = flx*-0.1
+    end = flx*0.003
+    time = 750,
     tween = Tween.Expo
 	pulse = false
  }
  
 local bigartskew_x = {
-    when = Transition.ToNewSelection ,
+    when = Transition.EndNavigation,
 	property = "skew_x",
 	start = 255,
     end = 0,
-	time = 1500,
+	time = 500,
 	loop = false
 	pulse = false
  }
  
 local bigartfade = {
-    when = Transition.ToNewSelection ,
+    when = Transition.EndNavigation,
 	property = "alpha",
 //	delay = 500
 	start = 0,
@@ -1187,11 +1057,11 @@ local bigartfade = {
 	loop = false
  }
 local bigartrotate = {
-    when = Transition.ToNewSelection,
+    when = Transition.EndNavigation,
     property = "rotation",
     start = 90,
     end = 0,
-    time = 1500,
+    time = 750,
     tween = Tween.Expo
     loop=false
  }
@@ -1207,11 +1077,158 @@ animation.add( PropertyAnimation ( bigart, bigartscale ) );
 }
 if ( my_config["enable_bigartflyin2"] == "Yes" ){
 animation.add( PropertyAnimation ( bigart, bigartx ) );
-animation.add( PropertyAnimation ( bigart, bigartskew_x ) );
+//animation.add( PropertyAnimation ( bigart, bigartskew_x ) );
 }
 if ( my_config["enable_bigartfade2"] == "Yes" ){
 animation.add( PropertyAnimation ( bigart, bigartfade ) );
 }
+}
+}
+
+//////////////////
+///Cart Art Animation
+//////////////////
+
+/////////////////////////////////////////////////////
+if ( my_config["enable_leftart"] == "Yes" ){
+if ( my_config["enable_bigart"] == "Yes" ){
+local bigart = fe.add_artwork(( my_config["select_bigartfolder"] ), flx*0.04, fly*0.45, flw*0.15, flh*0.25);
+bigart.preserve_aspect_ratio = true;
+bigart.trigger = Transition.EndNavigation;
+
+local bigart_rotate_onload = {
+    when = When.StartLayout,
+    when = Transition.ToNewList,
+    property = "rotation",
+    start = 90,
+    end = 0,
+    time = 750,
+    tween = Tween.Expo
+    loop=false
+ }
+
+if ( my_config["enable_bigartrotateonload"] == "Yes" ){
+animation.add( PropertyAnimation ( bigart, bigart_rotate_onload ) );
+}
+
+local bigartscale_onload = {
+    when = When.StartLayout,
+    when = Transition.ToNewList,
+    property = "scale",
+    start = 1.2,
+    end = 1.0,
+    time = 1000	
+    tween = Tween.Quad,
+}
+
+local bigartfade_onload = {
+    when = When.StartLayout,
+    when = Transition.ToNewList,
+	property = "alpha",
+	delay = 500
+	start = 0,
+	end = 255,
+	time = 500,
+	pulse = false
+	loop = false
+ }
+
+if ( my_config["enable_bigartscaleonload"] == "Yes" ){
+animation.add( PropertyAnimation ( bigart, bigartscale_onload ) );
+}
+if ( my_config["enable_bigartfadeonload"] == "Yes" ){
+animation.add( PropertyAnimation ( bigart, bigartfade_onload ) );
+}
+
+local bigartscale = {
+    when = Transition.EndNavigation,
+    property = "scale",
+    start = 1.2,
+    end = 1.0,
+    time = 500	
+    tween = Tween.Quad,
+	pulse = false
+//	delay = 500
+	
+}
+
+local bigartx = {
+    when = Transition.EndNavigation,
+    property = "x",
+    start = flx*-0.1
+    end = flx*0.04
+    time = 750,
+    tween = Tween.Expo
+	pulse = false
+ }  
+ 
+local bigartskew_x = {
+    when = Transition.EndNavigation,
+	property = "skew_x",
+	start = 255,
+    end = 0,
+	time = 500,
+	loop = false
+	pulse = false
+ } 
+ 
+local bigartfade = {
+    when = Transition.EndNavigation,
+	property = "alpha",
+//	delay = 500
+	start = 0,
+	end = 255,
+	time = 500,
+	pulse = false
+	loop = false
+ }
+local bigartrotate = {
+    when = Transition.EndNavigation,
+    property = "rotation",
+    start = 90,
+    end = 0,
+    time = 750,
+    tween = Tween.Expo
+    loop=false
+ }
+ 
+
+//Animation
+
+if ( my_config["enable_bigartrotate"] == "Yes" ){
+animation.add( PropertyAnimation ( bigart, bigartrotate ) );
+}
+if ( my_config["enable_bigartscale"] == "Yes" ){
+animation.add( PropertyAnimation ( bigart, bigartscale ) );
+}
+if ( my_config["enable_bigartflyin"] == "Yes" ){
+animation.add( PropertyAnimation ( bigart, bigartx ) );
+//animation.add( PropertyAnimation ( bigart, bigartskew_x ) );
+}
+if ( my_config["enable_bigartfade"] == "Yes" ){
+animation.add( PropertyAnimation ( bigart, bigartfade ) );
+}
+}
+}
+
+//////////////////////////////////////
+
+// CD art animation
+
+//////////////////////////////////////
+if ( my_config["enable_leftart"] == "Yes" ){
+if ( my_config["enable_bigart"] == "Yes" ){
+local cdart = fe.add_artwork("cdart", flx*0.04, fly*0.45, flw*0.15, flh*0.25);
+cdart.trigger = Transition.EndNavigation;
+cdart.preserve_aspect_ratio = true;
+
+local cdart_rotation = {
+when = Transition.ToNewSelection ,property = "rotation", start = 0, end = 360, time = 3000, loop = true,}
+local cdart_rotationLoad = {
+when = When.StartLayout ,property = "rotation", start = 0, end = 360, time = 3000, loop = true
+}
+animation.add( PropertyAnimation ( cdart, cdart_rotation ) );
+animation.add( PropertyAnimation ( cdart, cdart_rotationLoad ) );
 }
 }
 
@@ -1598,7 +1615,7 @@ local bigartscale = {
 }
 
 local bigartx = {
-    when = Transition.ToNewSelection,
+    when = Transition.EndNavigation,
     property = "x",
     start = flx*1
     end = flx*0.44
@@ -1608,7 +1625,7 @@ local bigartx = {
  }  
  
 local bigartskew_x = {
-    when = Transition.ToNewSelection ,
+    when = Transition.EndNavigation,
 	property = "skew_x",
 	start = 255,
     end = 0,
@@ -1618,7 +1635,7 @@ local bigartskew_x = {
  } 
  
 local bigartfade = {
-    when = Transition.ToNewSelection ,
+    when = Transition.EndNavigation,
 	property = "alpha",
 //	delay = 500
 	start = 255,
@@ -1628,7 +1645,7 @@ local bigartfade = {
 	loop = false
  } 
 local bigartrotate = {
-    when = Transition.ToNewSelection,
+    when = Transition.EndNavigation,
     property = "rotation",
     start = 90,
     end = 0,
@@ -1774,65 +1791,7 @@ animation.add( PropertyAnimation ( bigart, bigartfade ) );
 }
 
 
-/////////////////////////// 
-/////Wheel fading
-///////////////////////////
 
-if ( (my_config["enable_list_horizontal"] == "Vertical Wheel" ) || ( my_config["enable_list_horizontal"] == "Horizontal Boxart" ))
-{
-if ( wheel_fade_ms > 0 && ( my_config["enable_list_horizontal"] == "Wheel Right" || my_config["enable_list_horizontal"] == "Vertical Wheel" || my_config["enable_list_horizontal"] == "Vertical Wheel Left" || my_config["enable_list_horizontal"] == "Wheel Left" || my_config["enable_list_horizontal"] == "Horizontal Low" || my_config["enable_list_horizontal"] == "Horizontal Center" || my_config["enable_list_horizontal"] == "Horizontal Low Animated" || my_config["enable_list_horizontal"] == "Horizontal Low Big") || my_config["enable_list_horizontal"] == "Horizontal Low Big Animated" )
-{
-	
-	function wheel_fade_transition( ttype, var, ttime )
-	{
-		if ( ttype == Transition.ToNewSelection || ttype == Transition.ToNewList )
-				first_tick = -1;
-	}
-	fe.add_transition_callback( "wheel_fade_transition" );
-	
-	function wheel_alpha( ttime )
-	{
-		if (first_tick == -1)
-			stop_fading = false;
-
-		if ( !stop_fading )
-		{
-			local elapsed = 0;
-			if (first_tick > 0)
-				elapsed = ttime - first_tick;
-
-			local count = conveyor.m_objs.len();
-
-			for (local i=0; i < count; i++)
-			{
-				if ( elapsed > wheel_fade_ms)
-					conveyor.m_objs[i].alpha = 0;
-				else
-					//uses hardcoded default alpha values does not use wheel_a
-					//4 = Center one -> full alpha others use 80
-					if (i == 6)
-						conveyor.m_objs[i].alpha = (255 * (wheel_fade_ms - elapsed)) / wheel_fade_ms;
-					else
-						conveyor.m_objs[i].alpha = (255 * (wheel_fade_ms - elapsed)) / wheel_fade_ms;
-			}
-
-			if ( elapsed > wheel_fade_ms)
-			{
-				//So we don't keep doing the loop above when all values have 0 alpha
-				stop_fading = true;
-				//point.alpha = 0;
-			}
-			else
-				//hardcoded default pointer with full alpha alpha
-				//point.alpha = (255 * (wheel_fade_ms - elapsed)) / wheel_fade_ms;
-
-		  if (first_tick == -1)
-				first_tick = ttime;
-		}
-	}
-	fe.add_ticks_callback( "wheel_alpha" );
-}
-}
  
 
 
@@ -1866,10 +1825,10 @@ gameListBox.y += floor( ( gameListBox.height - ( floor( gameListBox.height / gam
 
 
 // Game Listbox Animations
-local gameListBoxAnimX = Animate( gameListBox, "x", 4, glist_delay, 0.88 )
-local gameListBoxAnimA = Animate( gameListBox, "listbox_alpha", 1, glist_delay, 0.88 )
-local gameListBoxBackgroundAnimX = Animate( gameListBoxBackground, "x", 4, glist_delay, 0.88 )
-local gameListBoxBackgroundAnimA = Animate( gameListBoxBackground, "bg_alpha", 1, glist_delay, 0.88 )
+local gameListBoxAnimX = Animate( gameListBox, "x", 4, glist_delay, 0.4 )
+local gameListBoxAnimA = Animate( gameListBox, "listbox_alpha", 1, glist_delay, 0.4 )
+local gameListBoxBackgroundAnimX = Animate( gameListBoxBackground, "x", 4, glist_delay, 0.4 )
+local gameListBoxBackgroundAnimA = Animate( gameListBoxBackground, "bg_alpha", 1, glist_delay, 0.4 )
 if ( glist_delay == 0 ) {
 	gameListBoxAnimX.to = flw + flx - crw - lbw
 	gameListBoxBackgroundAnimX.to = flw + flx - crw - lbw
@@ -1880,15 +1839,15 @@ if ( glist_delay == 0 ) {
 
 // Favourite Icon
 local favIconMargin = floor(bbh * 0.0625)
-local favouriteIcon = fe.add_image("images/star.png", flx + favIconMargin, flh - bbh + favIconMargin, bbh - favIconMargin * 2, bbh - favIconMargin * 2)
+local favouriteIcon = fe.add_image("images/star.png", (flx + bbm)*43, (flh - bbh + bbm)*0.06, bbh - favIconMargin * 2, bbh - favIconMargin * 2)
 favouriteIcon.set_rgb( gslRGB[0], gslRGB[1], gslRGB[2] )
  
 // Game Title
 if ( my_config["enable_title"] == "Yes") {
 if (( my_config["enable_list_horizontal"] == "Horizontal"  ) || ( my_config["enable_list_horizontal"] == "Horizontal Animated") || ( my_config["enable_list_horizontal"] == "Horizontal Boxart")){
-local gameTitleW = (flw - crw - bbm - bbm)*0.5
-local gameTitleH = (floor( bbh * 0.35 ) )*0.5
-local gameTitle = fe.add_text( "[Title]", (flx + bbm), (flh - bbh + bbm)*0.02, gameTitleW, gameTitleH )
+local gameTitleW = (flw - crw - bbm - bbm)*0.7
+local gameTitleH = (floor( bbh * 0.35 ) )*0.7
+local gameTitle = fe.add_text( "[Title]", (flx + bbm)*43.5, (flh - bbh + bbm)*0.06, gameTitleW, gameTitleH )
 gameTitle.align = Align.Left
 gameTitle.style = Style.Regular
 gameTitle.nomargin = true
@@ -1910,12 +1869,18 @@ function year_formatted()
 
 local gameYearW = (flw - crw - bbm - floor( bbh * 2.875 ))*0.8
 local gameYearH = floor( bbh * 0.15 )*0.8
-local gameYear = fe.add_text( "[!year_formatted]", (flx + bbm), (flh - bbm - gameYearH)*0.055, gameYearW, gameYearH )
+local gameYear = fe.add_text( "[Emulator]", (flx + bbm)*43.5, (flh - bbm - gameYearH)*0.1, gameYearW, gameYearH )
+local gameYear2 = fe.add_text( "[!year_formatted]", (flx + bbm)*43.5, (flh - bbm - gameYearH)*0.125, gameYearW, gameYearH )
 gameYear.align = Align.Left
 gameYear.style = Style.Regular
 gameYear.nomargin = true
 gameYear.charsize = floor(gameYear.height * 1000/700)
 gameYear.font = flh <= 600 ? "BebasNeueRegular.otf": "BebasNeueBook.otf"
+gameYear2.align = Align.Left
+gameYear2.style = Style.Regular
+gameYear2.nomargin = true
+gameYear2.charsize = floor(gameYear.height * 1000/700)
+gameYear2.font = flh <= 600 ? "BebasNeueRegular.otf": "BebasNeueBook.otf"
 
 local gameTitleFade = {
     when = Transition.ToNewSelection,
@@ -2050,22 +2015,14 @@ if ( my_config["fadeWheelTitle"] == "Yes" ){
 //////////
 if ( my_config["enable_leftart"] == "Yes" ){
 if ( my_config["enable_systemimage"] == "Yes" ){	
-local systemimage = fe.add_image(( "systemimages/[DisplayName]"), flw*0.01, flh*0.45, flw*0.22, flh*0.3);
+local systemimage = fe.add_image(( "systemimages/[DisplayName]"), flw*0.01, flh*0.62, flw*0.17, flh*0.3);
 systemimage.alpha=255;
 systemimage.preserve_aspect_ratio = true;	
 }
 }
-///////////
-//Character Image
-//////////
-/**
-if ( my_config["enable_characterimage"] == "Yes" ){
 	
-local characterimage = fe.add_image(( "characters/[DisplayName]"), flw*0.6, flh*0.65, flw*0.15, flh*0.15);
-characterimage.alpha=255;
-characterimage.preserve_aspect_ratio = true;	
-}
-**/
+
+
 
 if (( my_config["enable_list_horizontal"] == "Vertical Wheel"  ) || ( my_config["enable_list_horizontal"] == "List Box")){
 
@@ -2212,15 +2169,17 @@ local categoryLeft2AnimA = Animate( categoryLeft2, "alpha", categoryOvershot, 0,
 local categoryRight2AnimA = Animate( categoryRight2, "alpha", categoryOvershot, 0, categorySmoothing )
 
 // List Entry
-local gameListEntryW = floor( bth * 2.5 )
-local gameListEntryH = floor( bth * 0.25 )
+
+local gameListEntryW = floor( bth * 2.5 )*0.7
+local gameListEntryH = floor( bth * 0.25 )*0.7
 local gameListEntryY = floor( bth / 2.0 ) - floor( gameListEntryH / 2 )
-local gameListEntry = fe.add_text("[ListEntry]/[ListSize]", flx + flw - crw - gameListEntryW, gameListEntryY , gameListEntryW, gameListEntryH )
-gameListEntry.align = Align.Right
+local gameListEntry = fe.add_text("[ListEntry]/[ListSize]", (flx + bbm)*42.7, gameListEntryY*0.3 , gameListEntryW, gameListEntryH )
+gameListEntry.align = Align.Left
 gameListEntry.style = Style.Regular
 gameListEntry.font = "BebasNeueLight.otf"
 gameListEntry.set_rgb(titRGB[0],titRGB[1],titRGB[2])
 gameListEntry.charsize = floor(gameListEntry.height * 1000/700)
+
 
 // Transitions
 fe.add_transition_callback( this, "on_transition" )
@@ -2308,18 +2267,19 @@ function on_transition( ttype, var, ttime ) {
 
 
 	//Display current time
+
 if ( my_config["enable_clock"] == "Yes" ){
-  local dt = fe.add_text( "", flw*0.65, flh*0.03, flw*0.3, flh*0.095 );
+  local dt = fe.add_text( "", flw*0.9, gameListEntryY*0.3, gameListEntryW, gameListEntryH );
 dt.align = Align.Centre
 dt.filter_offset = 1
 //dt.set_rgb(selRGB[0],selRGB[1],selRGB[2])
 dt.style = Style.Regular
-dt.charsize = floor(category.height * 1000/701)
-dt.font = "BebasNeueBook.otf"
+dt.charsize = floor(gameListEntry.height * 1000/700)
+dt.font = "BebasNeueLight.otf"
 
-  local clock = fe.add_image ("clock.png",flw*0.73, flh*0.042, flw*0.040, flh*0.06);
-  clock.alpha = 255;
-  clock.preserve_aspect_ratio = true;
+//  local clock = fe.add_image ("clock.png",flw*0.73, flh*0.042, flw*0.040, flh*0.06);
+//  clock.alpha = 255;
+//  clock.preserve_aspect_ratio = true;
 //  clock.set_rgb(titRGB[0],titRGB[1],titRGB[2])
 
 function update_clock( ttime ){
@@ -2352,7 +2312,7 @@ function fade_transitions( ttype, var, ttime ) {
 fe.add_transition_callback( "fade_transitions" );
 
 //View name
-
+if ( my_config["ViewNamePopup"] == "On" ){
 local mfliter2W = (flw - crw - bbm - floor( bbh * 2.875 ))
 local mfliter2H = floor( bbh * 0.15 )
 
@@ -2410,6 +2370,7 @@ animation.add( PropertyAnimation( OBJECTS.mfliter, movein_msysfliter ) );
 animation.add( PropertyAnimation( OBJECTS.mfliter, moveout_msysfliter ) );
 animation.add( PropertyAnimation( OBJECTS.mfliter2, movein_msysfliter ) );
 animation.add( PropertyAnimation( OBJECTS.mfliter2, moveout_msysfliter ) );
+}
 //
 // Fade_in Module
 //
