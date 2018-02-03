@@ -1215,51 +1215,6 @@ animation.add( PropertyAnimation ( cdart, cdart_rotationLoad ) );
 }
 }
 
-///////////////////////
-//wheel overlay
-///////////////////////
-if ( my_config["enable_list_vertical"] == "Vertical Wheel" )
-{
-local wheelOverlay = fe.add_image ("white.png", flx*0.84, 0, flw*0.25, fly)
-wheelOverlay.set_rgb(lbgRGB[0],lbgRGB[1],lbgRGB[2])
-wheelOverlay.alpha = 200;
-
- local wheelOverlayFade = {
-    when = Transition.ToNewSelection,
-	property = "alpha",
-	start = 200,
-	end = 200,
-	time = 1,
-	pulse = false
-	loop = false
- } 
- 
-  local wheelOverlayFadeEnd = {
-    when = Transition.EndNavigation,
-	property = "alpha",
-	start = 200,
-	end = 0,
-	time = 1,
-	delay = 1500,
-	pulse = false
-	loop = false
- } 
- 
-   local wheelOverlayFadeLoad = {
-    when = Transition.ToNewList
-	property = "alpha",
-	start = 200,
-	end = 0,
-	time = 1500,
-	pulse = false
-	loop = false
- } 
- 
-animation.add( PropertyAnimation ( wheelOverlay, wheelOverlayFade ) );
-animation.add( PropertyAnimation ( wheelOverlay, wheelOverlayFadeLoad ) );
-animation.add( PropertyAnimation ( wheelOverlay, wheelOverlayFadeEnd ) );
-
- }
 //////////////
 //Border
 ///////////////
@@ -1286,366 +1241,101 @@ local fly = fe.layout.height;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // The following section sets up what type and wheel and displays the users choice
 
+fe.load_module("shuffle");
 
- //This enables vertical art instead of default wheel
- 
-{ 
+local wheelOverlay = fe.add_image ("white.png", flx*0.84, 0, flw*0.25, fly)
+wheelOverlay.set_rgb(lbgRGB[0],lbgRGB[1],lbgRGB[2])
+wheelOverlay.alpha = 200;
 
-//property animation - wheel pointers
-
-
-local point = fe.add_image("pointer.png", flx*0.905, fly*0.34, flw*0.2, flh*0.35);
-point.set_rgb( gslRGB[0], gslRGB[1], gslRGB[2] )
-
-local alpha_cfg = {
+ local wheelOverlayFade = {
     when = Transition.ToNewSelection,
-    property = "alpha",
-    start = 255,
+	property = "alpha",
+	start = 255,
 	end = 255,
 	time = 1,
-}
-animation.add( PropertyAnimation( point, alpha_cfg ) );
-
-local alphaendnav_cfg = {
+	pulse = false
+	loop = false
+ } 
+ 
+  local wheelOverlayFadeEnd = {
     when = Transition.EndNavigation,
 	property = "alpha",
-	start = 200,
+	start = 255,
 	end = 0,
 	time = 1,
-	delay = 1500,
+	delay = 2000,
 	pulse = false
 	loop = false
-}
-animation.add( PropertyAnimation( point, alphaendnav_cfg ) );
-
-local alphaload_cfg = {
-    when = Transition.ToNewList,
-    property = "alpha",
-    start = 255,
-    end = 0,
-    time = 1500,
-}
-animation.add( PropertyAnimation( point, alphaload_cfg ) );
-
-local movex_cfg = {
-    when = Transition.ToNewSelection,
-    property = "x",
-    start = flx*0.9,
-    end = point.x,
-    time = 200	
-}	
-animation.add( PropertyAnimation( point, movex_cfg ) );
-} 
-if ( my_config["enable_list_vertical"] == "Vertical Wheel" )
-{
-fe.load_module( "conveyor" );
-local wheel_x = [ flx*0.85, flx*0.85, flx*0.85, flx*0.85, flx*0.85, flx*0.85, flx*0.85, flx*0.85, flx*0.85, flx*0.85, flx*0.85, flx*0.85, ]; 
-local wheel_y = [ -fly*0.210, -fly*0.105, fly*0.0, fly*0.105, fly*0.210, fly*0.315, fly*0.420, fly*0.525, fly*0.630 fly*0.735, fly*0.840, fly*0.945, ];
-local wheel_w = [ flw*0.13, flw*0.13, flw*0.13, flw*0.13, flw*0.13, flw*0.13, flw*0.13, flw*0.13, flw*0.13, flw*0.13, flw*0.13, flw*0.13, ];
-local wheel_a = [  255,  255,  255,  255,  255,  255, 255,  255,  255,  255,  255,  255, ];
-local wheel_h = [  flh*0.2,  flh*0.2,  flh*0.2,  flh*0.2,  flh*0.2,  flh*0.2, flh*0.2,  flh*0.2,  flh*0.2,  flh*0.2,  flh*0.2,  flh*0.2, ];
-local wheel_r = [  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ];
-local num_arts = 8;
-
-class WheelEntry extends ConveyorSlot
-{
-	constructor()
-	{
-		base.constructor( ::fe.add_artwork( my_config["orbit_art"] ) );
-	}
-
-	function on_progress( progress, var )
-	{
-	  local p = progress / 0.1;
-		local slot = p.tointeger();
-		p -= slot;
-		
-		slot++;
-
-		if ( slot < 0 ) slot=0;
-		if ( slot >=10 ) slot=10;
-
-		m_obj.x = wheel_x[slot] + p * ( wheel_x[slot+1] - wheel_x[slot] );
-		m_obj.y = wheel_y[slot] + p * ( wheel_y[slot+1] - wheel_y[slot] );
-		m_obj.width = wheel_w[slot] + p * ( wheel_w[slot+1] - wheel_w[slot] );
-		m_obj.height = wheel_h[slot] + p * ( wheel_h[slot+1] - wheel_h[slot] );
-		m_obj.rotation = wheel_r[slot] + p * ( wheel_r[slot+1] - wheel_r[slot] );
-		m_obj.alpha = wheel_a[slot] + p * ( wheel_a[slot+1] - wheel_a[slot] );
-	}
-};
-
-local wheel_entries = [];
-for ( local i=0; i<num_arts/2; i++ )
-	wheel_entries.push( WheelEntry() );
-
-local remaining = num_arts - wheel_entries.len();
-
-// we do it this way so that the last wheelentry created is the Center one showing the current
-// selection (putting it at the top of the draw order)
-for ( local i=0; i<remaining; i++ )
-	wheel_entries.insert( num_arts/2, WheelEntry() );
-
-conveyor <- Conveyor();
-conveyor.set_slots( wheel_entries );
-conveyor.transition_ms = 50;
-try { conveyor.transition_ms = my_config["transition_ms"].tointeger(); } catch ( e ) { }
-
-
-}
-conveyor.preserve_aspect_ratio = true;
-
-
-////////////////////////////////////////////////////////////////////////////
-///
-///Animated Wheel Options
-///////////////////////////////////////////////////////////////////////////
-if ( my_config["enable_list_vertical"] == "Horizontal Animated" ){
-local bigart = fe.add_artwork(( my_config["orbit_art"] ), flx*0.44, fly*0.82, flw*0.12, flh*0.2);
-bigart.preserve_aspect_ratio = true;
-
-local bigart_rotate_onload = {
-    when = When.StartLayout,
-    when = Transition.ToNewList,
-    property = "rotation",
-    start = 90,
-    end = 0,
-    time = 1500,
-    tween = Tween.Expo
-    loop=false
- }
-
-if ( my_config["enable_wheelartrotateonload"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigart_rotate_onload ) );
-}
-
-local bigartscale_onload = {
-    when = When.StartLayout,
-    when = Transition.ToNewList,
-    property = "scale",
-    start = 1.2,
-    end = 1.0,
-    time = 1000	
-    tween = Tween.Quad,
-}
-
-local bigartfade_onload = {
-    when = When.StartLayout,
-    when = Transition.ToNewList,
+ } 
+ 
+   local wheelOverlayFadeLoad = {
+    when = Transition.ToNewList
 	property = "alpha",
-	delay = 500
 	start = 255,
 	end = 0,
 	time = 2000,
 	pulse = false
 	loop = false
- }
-if ( my_config["enable_wheelartscaleonload"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigartscale_onload ) );
-}
-if ( my_config["enable_wheelartfadeonload"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigartfade_onload ) );
-}
+ } 
+ 
+animation.add( PropertyAnimation ( wheelOverlay, wheelOverlayFade ) );
+animation.add( PropertyAnimation ( wheelOverlay, wheelOverlayFadeLoad ) );
+animation.add( PropertyAnimation ( wheelOverlay, wheelOverlayFadeEnd ) );
 
-local bigartscale = {
-    when = Transition.ToNewSelection,
-    property = "scale",
-    start = 1.2,
-    end = 1.0,
-    time = 500	
-    tween = Tween.Quad,
-	pulse = false
-//	delay = 500
+class ShuffleMarker extends Shuffle
+ {
 	
-}
-
-local bigartx = {
-    when = Transition.ToNewSelection,
-    property = "x",
-    start = flx*1
-    end = flx*0.44
-    time = 1500,
-    tween = Tween.Expo
-	pulse = false
- }  
- 
-local bigartskew_x = {
-    when = Transition.ToNewSelection ,
-	property = "skew_x",
-	start = 255,
-    end = 0,
-	time = 1500,
-	loop = false
-	pulse = false
- } 
- 
-local bigartfade = {
-    when = Transition.ToNewSelection ,
-	property = "alpha",
-//	delay = 500
-	start = 255,
-	end = 0,
-	time = 4000,
-	pulse = false
-	loop = false
- } 
-local bigartrotate = {
-    when = Transition.ToNewSelection,
-    property = "rotation",
-    start = 90,
-    end = 0,
-    time = 1500,
-    tween = Tween.Expo
-    loop=false
- } 
- 
- 
-//Animation
-
-if ( my_config["enable_wheelartrotate"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigartrotate ) );
-}
-if ( my_config["enable_wheelartscale"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigartscale ) );
-}
-if ( my_config["enable_wheelartflyin"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigartx ) );
-animation.add( PropertyAnimation ( bigart, bigartskew_x ) );
-}
-if ( my_config["enable_wheelartfade"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigartfade ) );
-}
-}
-////////////////////////////////////
-if ( my_config["enable_list_vertical"] == "Horizontal Low Big Animated" ){
-local bigart = fe.add_artwork(( my_config["orbit_art"] ), flx*0.44, fly*0.59, flw*0.22, flh*0.37);
-bigart.preserve_aspect_ratio = true;
-
-
-local bigart_rotate_onload = {
-    when = When.StartLayout,
-    when = Transition.ToNewList,
-    property = "rotation",
-    start = 90,
-    end = 0,
-    time = 1500,
-    tween = Tween.Expo
-    loop=false
- }
-
-if ( my_config["enable_wheelartrotateonload"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigart_rotate_onload ) );
-}
-
-local bigartscale_onload = {
-    when = When.StartLayout,
-    when = Transition.ToNewList,
-    property = "scale",
-    start = 0.1,
-    end = 1.0,
-    time = 1000	
-    tween = Tween.Quad,
-}
-
-local bigartfade_onload = {
-    when = When.StartLayout,
-    when = Transition.ToNewList,
-	property = "alpha",
-	delay = 500
-	start = 255,
-	end = 0,
-	time = 2000,
-	pulse = false
-	loop = false
- }
-
-if ( my_config["enable_wheelartscaleonload"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigartscale_onload ) );
-}
-if ( my_config["enable_wheelartfadeonload"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigartfade_onload ) );
-}
-
-local bigartscale = {
-    when = Transition.ToNewSelection,
-    property = "scale",
-    start = 1.2,
-    end = 1.0,
-    time = 500	
-    tween = Tween.Quad,
-	pulse = false
-//	delay = 500
-}
-
-local bigartx = {
-    when = Transition.ToNewSelection,
-    property = "x",
-    start = flx*1
-    end = flx*0.44
-    time = 1500,
-    tween = Tween.Expo
-	pulse = false
- }
- 
-local bigartskew_x = {
-    when = Transition.ToNewSelection ,
-	property = "skew_x",
-	start = 255,
-    end = 0,
-	time = 1500,
-	loop = false
-	pulse = false
- }
- 
-local bigartfade = {
-    when = Transition.ToNewSelection ,
-	property = "alpha",
-//	delay = 500
-	start = 255,
-	end = 0,
-	time = 4000,
-	pulse = false
-	loop = false
- } 
- local bigartrotate = {
-    when = Transition.ToNewSelection,
-    property = "rotation",
-    start = 90,
-    end = 0,
-    time = 1500,
-    tween = Tween.Expo
-    loop=false
- }
- 
- 
-//Animation
-
-if ( my_config["enable_wheelartrotate"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigartrotate ) );
-}
-if ( my_config["enable_wheelartscale"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigartscale ) );
-}
-if ( my_config["enable_wheelartflyin"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigartx ) );
-animation.add( PropertyAnimation ( bigart, bigartskew_x ) );
-}
-if ( my_config["enable_wheelartfade"] == "Yes" ){
-animation.add( PropertyAnimation ( bigart, bigartfade ) );
-}
-}
-
-
-
-/////////////////////////// 
-/////Wheel fading
-///////////////////////////
-
-if ( (my_config["enable_list_vertical"] == "Vertical Wheel" ) || ( my_config["enable_list_vertical"] == "Horizontal Boxart" ))
-{
-if ( wheel_fade_ms > 0 && ( my_config["enable_list_vertical"] == "Wheel Right" || my_config["enable_list_vertical"] == "Vertical Wheel" || my_config["enable_list_vertical"] == "Vertical Wheel Left" || my_config["enable_list_vertical"] == "Wheel Left" || my_config["enable_list_vertical"] == "Horizontal Low" || my_config["enable_list_vertical"] == "Horizontal Center" || my_config["enable_list_vertical"] == "Horizontal Low Animated" || my_config["enable_list_vertical"] == "Horizontal Low Big") || my_config["enable_list_vertical"] == "Horizontal Low Big Animated" )
-{
+        function select(slot) 
+ {
+	slot.visible = true;
+	}
 	
-	function wheel_fade_transition( ttype, var, ttime )
+	function deselect(slot) 
+ {
+	slot.visible = false;
+	}
+}
+
+local marker = ShuffleMarker(7, "image", "white.png");
+
+marker.slots[0].set_pos(flx*0.84, fly*0.15, flw*0.25, flh*0.1);
+marker.slots[1].set_pos(flx*0.84, fly*0.25, flw*0.25, flh*0.1);
+marker.slots[2].set_pos(flx*0.84, fly*0.35, flw*0.25, flh*0.1);
+marker.slots[3].set_pos(flx*0.84, fly*0.45, flw*0.25, flh*0.1);
+marker.slots[4].set_pos(flx*0.84, fly*0.55, flw*0.25, flh*0.1);
+marker.slots[5].set_pos(flx*0.84, fly*0.65, flw*0.25, flh*0.1);	
+marker.slots[6].set_pos(flx*0.84, fly*0.75, flw*0.25, flh*0.1);
+
+local list = Shuffle(7, "artwork", "wheel");
+list.slots[0].set_pos(flx*0.85, fly*0.15, flw*0.12, flh*0.1);
+list.slots[1].set_pos(flx*0.85, fly*0.25, flw*0.12, flh*0.1);
+list.slots[2].set_pos(flx*0.85, fly*0.35, flw*0.12, flh*0.1);
+list.slots[3].set_pos(flx*0.85, fly*0.45, flw*0.12, flh*0.1);
+list.slots[4].set_pos(flx*0.85, fly*0.55, flw*0.12, flh*0.1);
+list.slots[5].set_pos(flx*0.85, fly*0.65, flw*0.12, flh*0.1);
+list.slots[6].set_pos(flx*0.85, fly*0.75, flw*0.12, flh*0.1);
+
+
+
+for( local i = 0; i < list.slots.len(); i++ ){
+list.slots[i].preserve_aspect_ratio = true;
+}
+
+for( local i = 0; i < marker.slots.len(); i++ ){
+
+animation.add( PropertyAnimation ( marker.slots[i], wheelOverlayFade ) );
+animation.add( PropertyAnimation ( marker.slots[i], wheelOverlayFadeLoad ) );
+animation.add( PropertyAnimation ( marker.slots[i], wheelOverlayFadeEnd ) );
+}
+
+
+first_tick <- 0;
+stop_fading <- true;
+wheel_fade_ms <- 0;
+try {	wheel_fade_ms = my_config["wheel_fade_ms"].tointeger(); } catch ( e ) { }
+
+
+function wheel_fade_transition( ttype, var, ttime )
 	{
 		if ( ttype == Transition.ToNewSelection || ttype == Transition.ToNewList )
 				first_tick = -1;
@@ -1663,19 +1353,19 @@ if ( wheel_fade_ms > 0 && ( my_config["enable_list_vertical"] == "Wheel Right" |
 			if (first_tick > 0)
 				elapsed = ttime - first_tick;
 
-			local count = conveyor.m_objs.len();
+			local count = list.slots.len();
 
 			for (local i=0; i < count; i++)
 			{
 				if ( elapsed > wheel_fade_ms)
-					conveyor.m_objs[i].alpha = 0;
+					list.slots[i].alpha = 0;
 				else
 					//uses hardcoded default alpha values does not use wheel_a
 					//4 = Center one -> full alpha others use 80
 					if (i == 80)
-						conveyor.m_objs[i].alpha = (255 * (wheel_fade_ms - elapsed)) / wheel_fade_ms;
+						list.slots[i].alpha = (255 * (wheel_fade_ms - elapsed)) / wheel_fade_ms;
 					else
-						conveyor.m_objs[i].alpha = (255 * (wheel_fade_ms - elapsed)) / wheel_fade_ms;
+						list.slots[i].alpha = (255 * (wheel_fade_ms - elapsed)) / wheel_fade_ms;
 			}
 
 			if ( elapsed > wheel_fade_ms)
@@ -1693,10 +1383,9 @@ if ( wheel_fade_ms > 0 && ( my_config["enable_list_vertical"] == "Wheel Right" |
 		}
 	}
 	fe.add_ticks_callback( "wheel_alpha" );
-}
-}
- 
+	
 
+/////////////////////////////////////////////////////////////////////////////////
 
 local layout_width = fe.layout.width
 local layout_height = fe.layout.height
@@ -1705,13 +1394,10 @@ local fly = ( fe.layout.height - layout_height ) / 2
 local flw = layout_width
 local flh = layout_height
 
-
 // Game ListBox Background
 local gameListBoxBackground = fe.add_text("", flx + flw - crw, 0, lbw, flh )
 gameListBoxBackground.set_bg_rgb( lbgRGB[0] * 0.75, lbgRGB[1] * 0.75, lbgRGB[2] * 0.75 )
 gameListBoxBackground.bg_alpha = 0
-
-
 
 // Game ListBox
 local gameListBox = fe.add_listbox( flx + flw - crw, bth, lbw, flh - bth - bbh)
