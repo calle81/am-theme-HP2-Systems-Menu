@@ -27,7 +27,7 @@ class UserConfig {
    	</ label="Clock", help="Enable Clock", options="Yes,No", order=15 /> enable_clock="No";
 	</ label="Enable System Image", help="Enable System Image Art", options="Yes,No", order=16 /> enable_systemimage="Yes";
 	</ label="Art Load Delay", help="Delay Loading of snaps and flyer to optimize performance", options="On,Off", order=8 /> art_delay="Off" ;
-	</ label="View Name Popup", help="Disable or enable view name popup", options="On,Off", order=8 /> ViewNamePopup="On";
+	</ label="View Name Popup", help="Disable or enable view name popup", options="On,Off", order=8 /> ViewNamePopup="Off";
 	</ label=" ", help="Brought to you by Project HyperPie", order=17 /> uct4=" ";
 
 
@@ -247,7 +247,7 @@ bgart.set_animate(::AnimateType.Bounce, 0.50, 0.50)
 bgart.set_randomize_on_transition(false);
 bgart.set_start_scale(1.0);
 
-if ( my_config["enable_bg"] == "Game Flyer Pan & Scan")
+if ( my_config["enable_bg"] == "Game Flyer")
 {
 local bgart2 = PanAndScanArt( "flyer", 0, 0, flw, flh);
 bgart.trigger = Transition.EndNavigation;
@@ -2419,6 +2419,19 @@ function fade_transitions( ttype, var, ttime ) {
 }
 
 fe.add_transition_callback( "fade_transitions" );
+
+// Load the Shuffle module
+fe.load_module("shuffle");
+
+// Create an instance of the class
+// Shuffle(quantity=5, type="text", param="[Title]", reset=true, parent=::fe)
+local list = Shuffle(5, "text", "[Title]");
+	// Set the position of the created slots
+	list.slots[0].set_pos(x, y, w, h);
+	list.slots[1].set_pos(x, y, w, h);
+	list.slots[2].set_pos(x, y, w, h);
+	list.slots[3].set_pos(x, y, w, h);
+	list.slots[4].set_pos(x, y, w, h);
 
 //View name
 if ( my_config["ViewNamePopup"] == "On" ){

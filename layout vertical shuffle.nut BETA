@@ -25,13 +25,13 @@ class UserConfig {
 	</ label="Enable Flyer Art", help="Enable Flyer Art", options="Yes,No", order=14 /> enable_bigart3="";
    	</ label="Clock", help="Enable Clock", options="Yes,No", order=15 /> enable_clock="";
 	</ label="Enable System Image", help="Enable System Image Art", options="Yes,No", order=16 /> enable_systemimage="";
-	</ label="Art Load Delay", help="Delay Loading of snaps and flyer to optimize performance", options="On,Off", order=8 /> art_delay="" ;
 	</ label="View Name Popup", help="Disable or enable view name popup", options="On,Off", order=8 /> ViewNamePopup="";
+	</ label="Art Load Delay", help="Delay Loading of snaps and flyer to optimize performance", options="On,Off", order=8 /> art_delay="" ;
 	</ label=" ", help="Brought to you by Project HyperPie", order=17 /> uct4=" ";
 
 
 	</ label="WHEEL OPTIONS", help="Brought to you by Project HyperPie", order=18 /> uct5=" ";   
-	</ label="Wheel Layout", help="Select wheel type", options="List Box,Horizontal,Horizontal Animated,Vertical Wheel", order=19 /> enable_list_horizontal="Vertical Wheel";
+	</ label="Wheel Layout", help="Select wheel type", options="List Box,Horizontal,Horizontal Animated,Vertical Wheel", order=19 /> enable_list_vertical="Vertical Wheel";
 	</ label="Wheel Art Folder", help="The artwork to spin", options="wheel, marquee, flyer, fanart, cartart, boxart", order=20 /> orbit_art="";
 	</ label="Wheel Transition Time", help="Time in milliseconds for wheel spin.", order=21 /> transition_ms="";  
 	</ label="Wheel Fade Time", help="Time in milliseconds to fade the wheel.", options="Off,2500,5000,7500,10000,12500,15000,17500,20000,22500,25000,27500,30000", order=22 /> wheel_fade_ms="";
@@ -74,7 +74,7 @@ class UserConfig {
    
 	  
  </ label="CART ART OPTIONS", help="Show or hide additional images", order=54 /> uct15=" "
-   </ label="Enable Cart Art", help="Enable Cart Art", options="Yes,No", order=55 /> enable_bigart="";
+   </ label="Enable Cart Art", help="Enable Cart Art", options="Yes,No", order=55 /> enable_bigart="Yes";
    </ label="Select Cart Art Folder", help="Select Cart Art Folder", options="wheel, marquee, flyer, fanart, boxart, cartart", order=56 /> select_bigartfolder="";
    </ label="Enable Cart Art Fade on Selection", help="Enable Cart Art Fade on Selection", options="Yes,No", order=57 /> enable_bigartfade="";
    </ label="Enable Cart Art Fade on Load", help="Enable Cart Art Fade on Load", options="Yes,No", order=58 /> enable_bigartfadeonload=""; 
@@ -243,7 +243,7 @@ bgart.set_animate(::AnimateType.Bounce, 0.50, 0.50)
 bgart.set_randomize_on_transition(false);
 bgart.set_start_scale(1.1);
 
-if ( my_config["enable_bg"] == "Game Flyer Pan & Scan")
+if ( my_config["enable_bg"] == "Game Flyer")
 {
 local bgart2 = PanAndScanArt( "flyer", 0, 0, flw, flh);
 bgart.trigger = Transition.EndNavigation;
@@ -644,7 +644,7 @@ animation.add( PropertyAnimation( bgflyerslide2, {when = Transition.StartLayout,
 
 if ( my_config["enable_bg"] == "Neon Logos Light Blue") 
 {
-local bgflyerslide = fe.add_image("backgrounds/Neon Logos/neon Light blue.png", 0, 0, flw, flh );
+local bgflyerslide = fe.add_image("backgrounds/Neon Logos/neon light blue.png", 0, 0, flw, flh );
 bgflyerslide.preserve_aspect_ratio = true;
 local bgflyerslide2 = fe.add_clone(bgflyerslide);
 bgflyerslide2.preserve_aspect_ratio = true;
@@ -715,29 +715,6 @@ scanline.alpha = 255;
 if ( my_config["enable_backgroundoverlay"] == "Diagonal")
 {
 local bgflyerslide = fe.add_image("scanline2.png", 0, 0, flw, flh );
-}
-//////////////
-//Border
-///////////////
-if ( my_config["enable_border"] == "Yes") {
-// Snap Background
-local flx = ( fe.layout.width - layout_width ) / 2
-local fly = ( fe.layout.height - layout_height ) / 2
-//local snapBackground = fe.add_image( "images/gradientV.png", flx, bth, flw - crw, flh - bth - bbh )
-//snapBackground.set_rgb( bgRGB[0] * 0.6, bgRGB[1] * 0.6, bgRGB[2] * 0.6 )
-//snapBackground.alpha=100;
-
- // Top Background
-local bannerTop = fe.add_image( "white.png", flx, 0, flw, bth)
-bannerTop.set_rgb( bgRGB[0], bgRGB[1], bgRGB[2] )
-bannerTop.alpha=150;
-
-// Bottom Background
-local bannerBottom = fe.add_image( "white.png", flx, flh - bbh, flw, bbh)
-bannerBottom.set_rgb( bgRGB[0], bgRGB[1], bgRGB[2] )
-bannerBottom.alpha=150;
-local flx = fe.layout.width;
-local fly = fe.layout.height;
 }
 
 
@@ -836,6 +813,7 @@ local scanline = fe.add_image( "scanline.png", 0, 0, flw, flh );
 scanline.preserve_aspect_ratio = false;
 scanline.alpha = 255;
 }
+
 
 
 //////////////////
@@ -1237,38 +1215,43 @@ animation.add( PropertyAnimation ( cdart, cdart_rotationLoad ) );
 }
 }
 
-///////////
-//System Image
-//////////
-if ( my_config["enable_leftart"] == "Yes" ){
-if ( my_config["enable_systemimage"] == "Yes" ){	
-local systemimage = fe.add_image(( "systemimages/[DisplayName]"), flw*0.01, flh*0.62, flw*0.17, flh*0.3);
-systemimage.alpha=255;
-systemimage.preserve_aspect_ratio = true;	
-}
-}
-//Overlay
-if ( my_config["enable_list_horizontal"] == "Vertical Wheel" )
-{
-local wheelOverlay = fe.add_image ("white.png", 0, 0, flw, fly)
-wheelOverlay.set_rgb(0,0,0)
-wheelOverlay.alpha = 230;
+//////////////
+//Border
+///////////////
+if ( my_config["enable_border"] == "Yes") {
+// Snap Background
+local flx = ( fe.layout.width - layout_width ) / 2
+local fly = ( fe.layout.height - layout_height ) / 2
+//local snapBackground = fe.add_image( "images/gradientV.png", flx, bth, flw - crw, flh - bth - bbh )
+//snapBackground.set_rgb( bgRGB[0] * 0.6, bgRGB[1] * 0.6, bgRGB[2] * 0.6 )
+//snapBackground.alpha=100;
 
- local wheelOverlayFadeStart = {
-	when = Transition.StartLayout,
-	property = "alpha",
-	start = 230,
-	end = 230,
-	time = 10000,
-	pulse = false
-	loop = false
- } 
+ // Top Background
+local bannerTop = fe.add_image( "white.png", flx, 0, flw, bth)
+bannerTop.set_rgb( bgRGB[0], bgRGB[1], bgRGB[2] )
+bannerTop.alpha=150;
+
+// Bottom Background
+local bannerBottom = fe.add_image( "white.png", flx, flh - bbh, flw, bbh)
+bannerBottom.set_rgb( bgRGB[0], bgRGB[1], bgRGB[2] )
+bannerBottom.alpha=150;
+local flx = fe.layout.width;
+local fly = fe.layout.height;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// The following section sets up what type and wheel and displays the users choice
+
+fe.load_module("shuffle");
+
+local wheelOverlay = fe.add_image ("white.png", flx*0.84, 0, flw*0.25, fly)
+wheelOverlay.set_rgb(lbgRGB[0],lbgRGB[1],lbgRGB[2])
+wheelOverlay.alpha = 200;
 
  local wheelOverlayFade = {
     when = Transition.ToNewSelection,
 	property = "alpha",
-	start = 230,
-	end = 230,
+	start = 255,
+	end = 255,
 	time = 1,
 	pulse = false
 	loop = false
@@ -1277,10 +1260,10 @@ wheelOverlay.alpha = 230;
   local wheelOverlayFadeEnd = {
     when = Transition.EndNavigation,
 	property = "alpha",
-	start = 230,
+	start = 255,
 	end = 0,
-	time = 2,
-	delay = 500,
+	time = 1,
+	delay = 2000,
 	pulse = false
 	loop = false
  } 
@@ -1288,21 +1271,121 @@ wheelOverlay.alpha = 230;
    local wheelOverlayFadeLoad = {
     when = Transition.ToNewList
 	property = "alpha",
-	start = 230,
-	end = 230,
-	time = 1,
+	start = 255,
+	end = 0,
+	time = 2000,
 	pulse = false
 	loop = false
  } 
-//animation.add( PropertyAnimation ( wheelOverlay, wheelOverlayFadeStart ) ); 
+ 
 animation.add( PropertyAnimation ( wheelOverlay, wheelOverlayFade ) );
 animation.add( PropertyAnimation ( wheelOverlay, wheelOverlayFadeLoad ) );
 animation.add( PropertyAnimation ( wheelOverlay, wheelOverlayFadeEnd ) );
 
- }
+class ShuffleMarker extends Shuffle
+ {
+	
+        function select(slot) 
+ {
+	slot.visible = true;
+	}
+	
+	function deselect(slot) 
+ {
+	slot.visible = false;
+	}
+}
+
+local marker = ShuffleMarker(7, "image", "white.png");
+
+marker.slots[0].set_pos(flx*0.84, fly*0.15, flw*0.25, flh*0.1);
+marker.slots[1].set_pos(flx*0.84, fly*0.25, flw*0.25, flh*0.1);
+marker.slots[2].set_pos(flx*0.84, fly*0.35, flw*0.25, flh*0.1);
+marker.slots[3].set_pos(flx*0.84, fly*0.45, flw*0.25, flh*0.1);
+marker.slots[4].set_pos(flx*0.84, fly*0.55, flw*0.25, flh*0.1);
+marker.slots[5].set_pos(flx*0.84, fly*0.65, flw*0.25, flh*0.1);	
+marker.slots[6].set_pos(flx*0.84, fly*0.75, flw*0.25, flh*0.1);
+
+local list = Shuffle(7, "artwork", "wheel");
+list.slots[0].set_pos(flx*0.85, fly*0.15, flw*0.12, flh*0.1);
+list.slots[1].set_pos(flx*0.85, fly*0.25, flw*0.12, flh*0.1);
+list.slots[2].set_pos(flx*0.85, fly*0.35, flw*0.12, flh*0.1);
+list.slots[3].set_pos(flx*0.85, fly*0.45, flw*0.12, flh*0.1);
+list.slots[4].set_pos(flx*0.85, fly*0.55, flw*0.12, flh*0.1);
+list.slots[5].set_pos(flx*0.85, fly*0.65, flw*0.12, flh*0.1);
+list.slots[6].set_pos(flx*0.85, fly*0.75, flw*0.12, flh*0.1);
 
 
 
+for( local i = 0; i < list.slots.len(); i++ ){
+list.slots[i].preserve_aspect_ratio = true;
+}
+
+for( local i = 0; i < marker.slots.len(); i++ ){
+
+animation.add( PropertyAnimation ( marker.slots[i], wheelOverlayFade ) );
+animation.add( PropertyAnimation ( marker.slots[i], wheelOverlayFadeLoad ) );
+animation.add( PropertyAnimation ( marker.slots[i], wheelOverlayFadeEnd ) );
+}
+
+
+first_tick <- 0;
+stop_fading <- true;
+wheel_fade_ms <- 0;
+try {	wheel_fade_ms = my_config["wheel_fade_ms"].tointeger(); } catch ( e ) { }
+
+
+function wheel_fade_transition( ttype, var, ttime )
+	{
+		if ( ttype == Transition.ToNewSelection || ttype == Transition.ToNewList )
+				first_tick = -1;
+	}
+	fe.add_transition_callback( "wheel_fade_transition" );
+	
+	function wheel_alpha( ttime )
+	{
+		if (first_tick == -1)
+			stop_fading = false;
+
+		if ( !stop_fading )
+		{
+			local elapsed = 0;
+			if (first_tick > 0)
+				elapsed = ttime - first_tick;
+
+			local count = list.slots.len();
+
+			for (local i=0; i < count; i++)
+			{
+				if ( elapsed > wheel_fade_ms)
+					list.slots[i].alpha = 0;
+				else
+					//uses hardcoded default alpha values does not use wheel_a
+					//4 = Center one -> full alpha others use 80
+					if (i == 80)
+						list.slots[i].alpha = (255 * (wheel_fade_ms - elapsed)) / wheel_fade_ms;
+					else
+						list.slots[i].alpha = (255 * (wheel_fade_ms - elapsed)) / wheel_fade_ms;
+			}
+
+			if ( elapsed > wheel_fade_ms)
+			{
+				//So we don't keep doing the loop above when all values have 0 alpha
+				stop_fading = true;
+				//point.alpha = 0;
+			}
+			else
+				//hardcoded default pointer with full alpha alpha
+				//point.alpha = (255 * (wheel_fade_ms - elapsed)) / wheel_fade_ms;
+
+		  if (first_tick == -1)
+				first_tick = ttime;
+		}
+	}
+	fe.add_ticks_callback( "wheel_alpha" );
+	
+
+/////////////////////////////////////////////////////////////////////////////////
 
 local layout_width = fe.layout.width
 local layout_height = fe.layout.height
@@ -1311,13 +1394,10 @@ local fly = ( fe.layout.height - layout_height ) / 2
 local flw = layout_width
 local flh = layout_height
 
-
 // Game ListBox Background
 local gameListBoxBackground = fe.add_text("", flx + flw - crw, 0, lbw, flh )
 gameListBoxBackground.set_bg_rgb( lbgRGB[0] * 0.75, lbgRGB[1] * 0.75, lbgRGB[2] * 0.75 )
 gameListBoxBackground.bg_alpha = 0
-
-
 
 // Game ListBox
 local gameListBox = fe.add_listbox( flx + flw - crw, bth, lbw, flh - bth - bbh)
@@ -1353,7 +1433,7 @@ favouriteIcon.set_rgb( gslRGB[0], gslRGB[1], gslRGB[2] )
  
 // Game Title
 if ( my_config["enable_title"] == "Yes") {
-if (( my_config["enable_list_horizontal"] == "Horizontal"  ) || ( my_config["enable_list_horizontal"] == "Horizontal Animated") || ( my_config["enable_list_horizontal"] == "Horizontal Boxart")){
+if (( my_config["enable_list_vertical"] == "Horizontal"  ) || ( my_config["enable_list_vertical"] == "Horizontal Animated") || ( my_config["enable_list_vertical"] == "Horizontal Boxart")){
 local gameTitleW = (flw - crw - bbm - bbm)*0.5
 local gameTitleH = (floor( bbh * 0.35 ) )*0.5
 local gameTitle = fe.add_text( "[Title]", (flx + bbm), (flh - bbh + bbm)*0.02, gameTitleW, gameTitleH )
@@ -1433,7 +1513,7 @@ if ( my_config["fadeWheelTitle"] == "Yes" ){
 	}
 
 }
-if (( my_config["enable_list_horizontal"] == "Vertical Wheel"  ) || ( my_config["enable_list_horizontal"] == "List Box")){
+if (( my_config["enable_list_vertical"] == "Vertical Wheel"  ) || ( my_config["enable_list_vertical"] == "List Box")){
 local gameTitleW = flw - crw - bbm - bbm
 local gameTitleH = floor( bbh * 0.35 ) 
 local gameTitle = fe.add_text( "[Title]", flx + bbm, flh - bbh + bbm, gameTitleW, gameTitleH )
@@ -1513,21 +1593,20 @@ if ( my_config["fadeWheelTitle"] == "Yes" ){
 	}
 }
 }
-
+if (( my_config["enable_list_vertical"] == "Vertical Wheel"  ) || ( my_config["enable_list_vertical"] == "List Box")){
 
 ///////////
-//Character Image
+//System Image
 //////////
-/**
-if ( my_config["enable_characterimage"] == "Yes" ){
-	
-local characterimage = fe.add_image(( "characters/[DisplayName]"), flw*0.6, flh*0.65, flw*0.15, flh*0.15);
-characterimage.alpha=255;
-characterimage.preserve_aspect_ratio = true;	
+if ( my_config["enable_leftart"] == "Yes" ){
+if ( my_config["enable_systemimage"] == "Yes" ){	
+local systemimage = fe.add_image(( "systemimages/[DisplayName]"), flw*0.01, flh*0.62, flw*0.17, flh*0.3);
+systemimage.alpha=255;
+systemimage.preserve_aspect_ratio = true;	
 }
-**/
+}
 
-if (( my_config["enable_list_horizontal"] == "Vertical Wheel"  ) || ( my_config["enable_list_horizontal"] == "List Box")){
+
 
 // Genre
 local genreImageH = bbh - bbm * 2
@@ -1560,7 +1639,7 @@ playCountText.charsize = floor(playCountText.height * 1000/700 * 0.6)
 playCountText.font = "BebasNeueBold.otf"
 }
 
-if (( my_config["enable_list_horizontal"] == "Horizontal"  ) || ( my_config["enable_list_horizontal"] == "Horizontal Animated") || ( my_config["enable_list_horizontal"] == "Horizontal Boxart")){
+if (( my_config["enable_list_vertical"] == "Horizontal"  ) || ( my_config["enable_list_vertical"] == "Horizontal Animated") || ( my_config["enable_list_vertical"] == "Horizontal Boxart")){
 // Genre
 local genreImageH = bbh - bbm * 2
 local genreImageW = floor( genreImageH * 1.125 )
@@ -1675,7 +1754,7 @@ local categoryRight2AnimA = Animate( categoryRight2, "alpha", categoryOvershot, 
 local gameListEntryW = floor( bth * 2.5 )
 local gameListEntryH = floor( bth * 0.25 )
 local gameListEntryY = floor( bth / 2.0 ) - floor( gameListEntryH / 2 )
-local gameListEntry = fe.add_text("[ListEntry]/[ListSize]", flx + flw - crw - gameListEntryW, gameListEntryY , gameListEntryW, gameListEntryH )
+local gameListEntry = fe.add_text("[ListEntry]/[ListSize]", (flx + flw - crw - gameListEntryW)*0.8, gameListEntryY , gameListEntryW, gameListEntryH )
 gameListEntry.align = Align.Right
 gameListEntry.style = Style.Regular
 gameListEntry.font = "BebasNeueLight.otf"
@@ -1687,7 +1766,7 @@ fe.add_transition_callback( this, "on_transition" )
 
 function on_transition( ttype, var, ttime ) {
 	if( ttype == Transition.ToNewSelection) {
-	if ( my_config["enable_list_horizontal"] == "List Box" ){
+	if ( my_config["enable_list_vertical"] == "List Box" ){
 			gameListBoxAnimX.to = flw + flx - crw - lbw
 			if ( glist_delay != 0 ) gameListBoxAnimX.hide( flw + flx - crw, fe.layout.time )
 			gameListBoxAnimA.to = 255
@@ -1767,27 +1846,7 @@ function on_transition( ttype, var, ttime ) {
 	}
 
 
-	//Display current time
-if ( my_config["enable_clock"] == "Yes" ){
-  local dt = fe.add_text( "", flw*0.65, flh*0.03, flw*0.3, flh*0.095 );
-dt.align = Align.Centre
-dt.filter_offset = 1
-//dt.set_rgb(selRGB[0],selRGB[1],selRGB[2])
-dt.style = Style.Regular
-dt.charsize = floor(category.height * 1000/701)
-dt.font = "BebasNeueBook.otf"
 
-  local clock = fe.add_image ("clock.png",flw*0.73, flh*0.042, flw*0.040, flh*0.06);
-  clock.alpha = 255;
-  clock.preserve_aspect_ratio = true;
-//  clock.set_rgb(titRGB[0],titRGB[1],titRGB[2])
-
-function update_clock( ttime ){
-  local now = date();
-  dt.msg = format("%02d", now.hour) + ":" + format("%02d", now.min );
-}
-  fe.add_ticks_callback( this, "update_clock" );
-}
 
 
 ////////////////
@@ -1811,119 +1870,6 @@ function fade_transitions( ttype, var, ttime ) {
 
 fe.add_transition_callback( "fade_transitions" );
 
-
-
-local flx = fe.layout.width;
-local fly = fe.layout.height;
-local flw = fe.layout.width;
-local flh = fe.layout.height;
-
-local layout_width = fe.layout.width
-local layout_height = fe.layout.height
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-// The following section sets up what type and wheel and displays the users choice
-
-
-// Include the converyour helper module
-fe.load_module("conveyor_helper");
-
-
-	 
-/*
-	=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-	Coverflow List Demo
-	=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-	A vertical List with all valid options
-	Omitted options will use the defaults
-	
-*/
- 
-// initialize the vertical list
-
-
- local cList = MyGameList();
-
-		// ----------- General List Options -----------	
-		cList.type = ch.Coverflow; 				// OPTIONS: ch.Spinwheel / ch.Linear_Vertical / ch.Linear_Horizontal
-		cList.x = fe.layout.width/2;									// OPTIONS: top left x-coordinate if gl is linear or the center x-coordinate if a spinwheel
-		cList.y = fe.layout.height/2;									// OPTIONS: top left y-coordinate if gl is linear or the center y-coordinate if a spinwheel
-		cList.width = fe.layout.width; 				// OPTIONS: linear game list total width in pixels
-		cList.height = fe.layout.height; 							// OPTIONS: linear list's height in pixels
-		cList.ms_speed = 100;							// OPTIONS: in milliseconds, sets the speed of the conveyor
-		cList.fade_after_nav = 0;						// OPTIONS: 0-255 Fades the entire gl's alpha channel after navigation to this value. set to 255 to disable fading 
-		cList.fade_delay = 500; // the amount of time in milliseconds before the fade should start
-		cList.fade_speed = 20; // the mulitplier controlling the speed of the fade
-		cList.fade_selected = true;					 	// OPTIONS: TRUE/FALSE fade selected game if game list fading is active
-
-		
-		// ----------- Linear List options -----------
-		cList.linear.padding = 10;	// the amount of padding in pixels between each gl item
-		
-		// ----------- List Item  Options -----------
-		cList.item.contentTemplate = ch.Artwork_or_Text;		// OPTIONS: ch.Artwork / ch.Text / ch.Artwork_and_Text / ch.Artwork_or_Text / ch.Flyer_and_Artwork 
-		cList.item.count = 5; 							// OPTIONS: Total number of gl items to display
-        
-		cList.item.sizeScaling.low = 1.00; 				// OPTIONS: 0-100 Scaling size percentage to use for the item furthest from the selected item 
-		cList.item.sizeScaling.high = 1.00; 				// OPTIONS: 0-100 Scaling size percentage to use for item closest to the selected item
-		cList.item.sizeScaling.currentlySelected = 1.2;	// OPTIONS: 0-100 Scaling size percentage to use for the currently selected item
-        
-		cList.item.alphaScaling.low = 255; 				// OPTIONS: 0-100 Scaling size percentage to use for the item furthest from the selected item 
-		cList.item.alphaScaling.high = 255; 				// OPTIONS: 0-100 Scaling size percentage to use for item closest to the selected item
-		cList.item.alphaScaling.currentlySelected = 255;	// OPTIONS: 0-100 Scaling size percentage to use for the currently selected item
-        
-		cList.item.height = flh*0.4; 							// OPTIONS: Height of each gameList item in pixels before scaling - dynamic with linear vertical lists
-		cList.item.width = flx*0.3;							// OPTIONS: Width of each gameList item in pixels before scaling - dynamic with linear horizontal lists
-        
-		cList.item.margin.left = 5; 						// OPTION: bounding box left margin size for all images and text 
-		cList.item.margin.right = 5; 					// OPTION: bounding box right margin size for all images and text
-		cList.item.margin.top = 10;						// OPTION: bounding box top margin size for all images and text
-		cList.item.margin.bottom = 10;					// OPTION: bounding box bottom margin size for all images and text
-        
-		// ----------- List Item Content: borders / backgrounds / gloss / colors  -----------
-		cList.item.toggle.backgroundColor = false;			// if set to "TRUE" the game item background can be colored (use item.normal.color)
-		cList.item.toggle.backgroundFile = false;				// if set to "TRUE" the game item will use a file as the background (file: item_backgroundFile.png)
-		cList.item.toggle.selectedBackgroundColor = false; 	// if set to "TRUE" the selected game item background can be colored (use item.currentlySelected.color)
-		cList.item.toggle.selectedBackgroundFile = false;		// if set to "TRUE" the selected game item will use a file as the background (file: item_selectedBackgroundFile.png)
-		cList.item.toggle.glossOverlay = false;				// if set to "TRUE" will overlay the game item with a gloss file (file: item_glossOverlay.png)
-		cList.item.toggle.borderOverlay = false;				// if set to "TRUE" will overlay the game item with a boarder file (file: item_borderOverlay.png)
-		
-		cList.item.normal.color.red = 0;					// OPTIONS: background red color channel 0 - 255
-		cList.item.normal.color.green = 0;                	// OPTIONS: background green color channel 0 - 255
-		cList.item.normal.color.blue = 0;                 	// OPTIONS: background blue color channel 0 - 255
-        
-		cList.item.currentlySelected.color.red=0;				// OPTIONS: background red color channel 0 - 255
-		cList.item.currentlySelected.color.green=128;       	// OPTIONS: background green color channel 0 - 255
-		cList.item.currentlySelected.color.blue=128;        	// OPTIONS: background blue color channel 0 - 255
-        
-		// ----------- List Item Content: Text -----------
-		cList.text.message = "[Title]";
-		cList.text.alignment = Align.Centre;  			// OPTIONS:left/right/center
-		cList.text.normal.font = "BebasNeueBold.otf";
-		cList.text.normal.size = 20; 						// OPTIONS: text font size for every gameList item
-		cList.text.normal.color.red = 255;				// OPTIONS: text font red color channel 0 - 255
-		cList.text.normal.color.green = 255;				// OPTIONS: text font green color channel 0 - 255
-		cList.text.normal.color.blue = 128;				// OPTIONS: text font blue color channel 0 - 255
-		
-		cList.text.currentlySelected.font = "BebasNeueBold.otf";
-		cList.text.currentlySelected.size = 30; 			// OPTIONS: text font size for every gameList item
-		cList.text.currentlySelected.color.red = 128;		// OPTIONS: text font red color channel 0 - 255
-		cList.text.currentlySelected.color.green = 255; 	// OPTIONS: text font green color channel 0 - 255
-		cList.text.currentlySelected.color.blue = 128;  	// OPTIONS: text font blue color channel 0 - 255
-        
-		// ----------- List Item Content: User Defined Artwork -----------	
-		cList.artwork.type = "boxart"; 		// OPTIONS: name of the artwork to use for the conveyour
-		cList.artwork.type2 = "snap";			// OPTIONS: name of the artwork to use for the conveyour setting "Flyer_and_Artwork"
-		cList.artwork.preserveAspect = true; // OPTIONS: true / false
-		cList.add_favoriteImage(fe.script_dir + "favorite2.png", 8 , 2 , cList.item.height * 0.4 ,cList.item.height * 0.4);
-		
-// show the vertical list
-cList.show();
- 
-
- 
 //View name
 if ( my_config["ViewNamePopup"] == "On" ){
 local mfliter2W = (flw - crw - bbm - floor( bbh * 2.875 ))
@@ -1934,7 +1880,7 @@ local mfliter2H = floor( bbh * 0.15 )
 //msystem = fe.add_image( "../../menu-art/flyer/[DisplayName]", flw*0.3, flh*0.5, flw*0.4, flh*0.4 ),
 mwhiteline = fe.add_image( "white.png", 0, flh*0.3, fe.layout.width, flh*0.15 ),
 mfliter = fe.add_text( "[DisplayName]", 0, flh*0.3, fe.layout.width, flh*0.1 ),
-mfliter2 = fe.add_text( "Coverflow View", 0, flh*0.4, fe.layout.width, mfliter2H ),
+mfliter2 = fe.add_text( "Vertical Wheel View", 0, flh*0.4, fe.layout.width, mfliter2H ),
 }
 //OBJECTS.mbg.alpha = 200;
 //OBJECTS.mbg.preserve_aspect_ratio = true;
@@ -1984,8 +1930,6 @@ animation.add( PropertyAnimation( OBJECTS.mfliter, moveout_msysfliter ) );
 animation.add( PropertyAnimation( OBJECTS.mfliter2, movein_msysfliter ) );
 animation.add( PropertyAnimation( OBJECTS.mfliter2, moveout_msysfliter ) );
 }
-
-
 
 //
 // Fade_in Module

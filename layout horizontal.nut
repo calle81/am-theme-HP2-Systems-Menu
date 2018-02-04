@@ -235,7 +235,7 @@ bgart.set_animate(::AnimateType.Bounce, 0.50, 0.50)
 bgart.set_randomize_on_transition(false);
 bgart.set_start_scale(1.1);
 
-if ( my_config["enable_bg"] == "Game Flyer Pan & Scan")
+if ( my_config["enable_bg"] == "Game Flyer")
 {
 local bgart2 = PanAndScanArt( "flyer", 0, 0, flw, flh);
 bgart.trigger = Transition.EndNavigation;
